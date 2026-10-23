@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.0 (unreleased)
+## 0.1.0 (2026-10-22)
 
 First release of `expo-reanimated-side-menu`, extracted from the side menu built for the Run Rider app and turned into a generic package.
 
