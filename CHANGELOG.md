@@ -7,10 +7,12 @@ First release of `expo-reanimated-side-menu`, extracted from the side menu built
 ### 🎉 New features
 
 - `SideMenu`: side panel that slides in with Reanimated over a fading backdrop, inside a `Modal` so it covers the whole app, navigation bars included.
+- `children` and `scene`: the wrapped screen moves aside while the menu opens, turned in 3D (`tilt`, the default), pushed (`slide`) or still (`none`), with adjustable `offset`, `scale`, `rotate` and `borderRadius`.
 - Swipe the panel towards its edge to close it (`swipeToClose`), or tap the backdrop, or press the Android back button.
 - Item actions run once the menu has finished closing, so the next screen never fights the animation.
 - `sections` with optional titles, Ionicons names or your own elements as icons, and `badge` counters.
-- `profile` header with avatar, title, subtitle and an optional `onPress`; or your own `header`.
+- `profile` header with avatar, title, subtitle and an optional `onPress`.
+- Every piece is optional; `header`, `footer` and `content` take your own elements, or functions that receive `close` and `closeThen`. Items can have their own `color`.
 - Highlighted `action` button (`accent` or `outline`), `logout` row and `footerText`.
 - `side` (`left` / `right`), `width` (fraction of the screen or points), `openDuration` / `closeDuration`.
 - `theme`: every color and the fonts can be overridden; `defaultTheme` is exported.

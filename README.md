@@ -2,7 +2,7 @@
 
 🌐 **English** | [Español](https://github.com/VMichael1999/expo-reanimated-side-menu/blob/main/README.es.md)
 
-A polished side menu (drawer) for **Expo** and **React Native**. It slides in with Reanimated over a fading backdrop, closes with a swipe, and comes with a profile header, titled sections, badges, a highlighted action button and a logout row. Every color and font can be changed.
+A polished side menu (drawer) for **Expo** and **React Native**. It slides in with Reanimated while your screen moves aside, shrinks and turns in 3D, and closes with a swipe. Everything inside the panel is up to you: use the ready-made profile header, sections, badges, highlighted button and logout row, any of them, or your own content. Every color and font can be changed.
 
 [![CI](https://github.com/VMichael1999/expo-reanimated-side-menu/actions/workflows/ci.yml/badge.svg)](https://github.com/VMichael1999/expo-reanimated-side-menu/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/VMichael1999/expo-reanimated-side-menu/blob/main/LICENSE)
@@ -13,24 +13,24 @@ A polished side menu (drawer) for **Expo** and **React Native**. It slides in wi
 Taken with the [example app](#example-app) on an iPhone 17 Pro Max simulator.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/01-dark.png" width="200" alt="Dark menu with profile, sections, the accent action and logout"/>
+  <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/01-dark.png" width="200" alt="Dark menu with the screen behind it turned in 3D"/>
   <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/02-light.png" width="200" alt="The same menu with a light theme"/>
-  <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/03-right.png" width="200" alt="Menu opening from the right edge"/>
+  <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/03-right.png" width="200" alt="Menu opening from the right edge, with the screen turned the other way"/>
 </p>
 
-1. **Default theme**: dark panel with a lime accent.
+1. **Default look**: dark panel with a lime accent, and the screen shifted, shrunk and turned in 3D (`scene`).
 2. **Light theme**: just a `theme` object.
 3. **`side="right"`**: opens from the other edge.
 
 ## Features
 
 - Slides in and out with **Reanimated**, on the UI thread.
+- **Your screen moves aside** while the menu opens: turned in 3D (`tilt`, the default), pushed (`slide`) or left still (`none`), all adjustable.
 - **Swipe to close**: drag the panel towards its edge; let go past a third of it, or flick it, and it closes.
 - Rendered in a `Modal`, so it covers the whole app, headers and tab bars included. The Android back button closes it.
 - Switches the **status bar** to light or dark text to match the panel while it is open.
 - **Actions run after the menu closes**, so navigating never fights the closing animation.
-- **Profile header** with avatar, title and subtitle, or your own header.
-- **Sections** with optional titles, **badges**, a highlighted **action** button and a **logout** row.
+- **Everything inside is optional and replaceable**: profile header, sections, **badges**, a highlighted **action** button, a **logout** row and footer text, or your own `header`, `footer` or whole `content`.
 - Opens from the **left or right**, with any **width**.
 - **Theming** of every color and font; works with your own icons too.
 - Written in TypeScript, no native code of its own: works in Expo Go.
@@ -55,42 +55,65 @@ Wrap your app in `SafeAreaProvider` (Expo Router already does it). The menu read
 
 ## Quick start
 
+Wrap the screen that opens the menu; that screen is what moves aside:
+
 ```tsx
 import { useState } from 'react';
-import { Button } from 'react-native';
+import { Button, View } from 'react-native';
 import { SideMenu } from 'expo-reanimated-side-menu';
 
 export function Home({ navigation }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <>
-      <Button title="Menu" onPress={() => setOpen(true)} />
-      <SideMenu
-        visible={open}
-        onClose={() => setOpen(false)}
-        profile={{ title: 'My profile', subtitle: '+1 555 0100', onPress: () => navigation.navigate('Profile') }}
-        sections={[
-          {
-            key: 'main',
-            title: 'Navigation',
-            items: [
-              { key: 'trips', label: 'My trips', icon: 'time-outline', onPress: () => navigation.navigate('Trips') },
-              { key: 'inbox', label: 'Inbox', icon: 'mail-outline', badge: 3, onPress: () => navigation.navigate('Inbox') },
-            ],
-          },
-        ]}
-        logout={{ onPress: signOut }}
-        footerText="Version 1.0.0"
-      />
-    </>
+    <SideMenu
+      visible={open}
+      onClose={() => setOpen(false)}
+      profile={{ title: 'My profile', subtitle: '+1 555 0100', onPress: () => navigation.navigate('Profile') }}
+      sections={[
+        {
+          key: 'main',
+          title: 'Navigation',
+          items: [
+            { key: 'trips', label: 'My trips', icon: 'time-outline', onPress: () => navigation.navigate('Trips') },
+            { key: 'inbox', label: 'Inbox', icon: 'mail-outline', badge: 3, onPress: () => navigation.navigate('Inbox') },
+          ],
+        },
+      ]}
+      logout={{ onPress: signOut }}
+      footerText="Version 1.0.0">
+      {/* Your screen */}
+      <View style={{ flex: 1 }}>
+        <Button title="Menu" onPress={() => setOpen(true)} />
+      </View>
+    </SideMenu>
   );
 }
 ```
 
 The menu is controlled: you own `visible` and set it back to `false` in `onClose`. Tapping an item calls `onClose` first and runs the item's `onPress` once the panel is gone.
 
+Without `children` the menu still works, just without moving any screen: render `<SideMenu ... />` anywhere.
+
 ## Guide
+
+### The screen behind: `scene`
+
+The `children` you wrap move aside while the menu opens, following the panel as it is dragged:
+
+```tsx
+<SideMenu scene={{ effect: 'tilt' }} ...>   {/* default: shifted, shrunk and turned in 3D */}
+<SideMenu scene={{ effect: 'slide' }} ...>  {/* pushed aside by the panel's width */}
+<SideMenu scene={{ effect: 'none' }} ...>   {/* stays where it is */}
+```
+
+Every value can be tuned on top of the effect:
+
+```tsx
+scene={{ effect: 'tilt', offset: 0.6, scale: 0.8, rotate: 12, borderRadius: 32 }}
+```
+
+`offset` up to `1` is a fraction of the screen, larger values are points. The space around the screen shows the panel color.
 
 ### Sections and items
 
@@ -98,13 +121,14 @@ Each section has a `key`, an optional `title` and its `items`. An item's `icon` 
 
 ```tsx
 { key: 'cart', label: 'Cart', icon: <MyCartIcon />, badge: 2, onPress: openCart }
+{ key: 'delete', label: 'Delete account', icon: 'trash-outline', color: '#E5484D', onPress: deleteAccount }
 ```
 
 ### Header
 
 `profile` draws an avatar, a title and a subtitle. `avatar` takes an image (`require(...)` or `{ uri }`) or an element; without it a person icon is shown. With `onPress`, the header shows a chevron and becomes a button.
 
-For something else entirely, pass your own `header` element instead.
+For something else entirely, pass your own `header` instead (see below).
 
 ### Highlighted action
 
@@ -122,6 +146,29 @@ action={{
 ### Logout and footer
 
 `logout` adds a row in the danger color at the bottom (`label` defaults to `'Log out'`). `footerText` adds a small centered text below it, such as the app version.
+
+### Your own content
+
+Every piece is optional: leave out whatever you don't need. And three slots take your own content:
+
+- `header`: replaces the profile header.
+- `footer`: added at the very bottom of the panel.
+- `content`: replaces everything inside the panel.
+
+Each one takes an element, or a function that receives `close` and `closeThen`, so your own buttons can close the menu and act once it is gone:
+
+```tsx
+<SideMenu
+  visible={open}
+  onClose={() => setOpen(false)}
+  header={<MyBrandHeader />}
+  sections={sections}
+  footer={({ closeThen }) => (
+    <Button title="Help" onPress={() => closeThen(() => navigation.navigate('Help'))} />
+  )}>
+  <Screen />
+</SideMenu>
+```
 
 ### Side, width and timing
 
@@ -163,12 +210,16 @@ Without `fonts`, the system font is used at the right weights. `defaultTheme` is
 | --- | --- | --- | --- |
 | `visible` | `boolean` | | Whether the menu is open. |
 | `onClose` | `() => void` | | Backdrop tap, swipe, Android back, or before an item runs. |
-| `sections` | `SideMenuSection[]` | | The menu content. |
+| `children` | `ReactNode` | | Your screen; it moves aside with `scene`. |
+| `scene` | `SideMenuScene` | `{ effect: 'tilt' }` | `effect`, `offset`, `scale`, `rotate`, `borderRadius`. |
+| `sections` | `SideMenuSection[]` | `[]` | Titled groups of items. |
 | `profile` | `SideMenuProfile` | | Avatar, title, subtitle and `onPress`. |
-| `header` | `ReactNode` | | Replaces `profile`. |
+| `header` | `SideMenuSlot` | | Replaces `profile`. |
 | `action` | `SideMenuAction` | | Highlighted button: `label`, `icon`, `onPress`, `variant`. |
 | `logout` | `SideMenuLogout` | | `label`, `icon`, `onPress`. |
 | `footerText` | `string` | | Small text at the bottom. |
+| `footer` | `SideMenuSlot` | | Your own content at the very bottom. |
+| `content` | `SideMenuSlot` | | Replaces everything inside the panel. |
 | `side` | `'left' \| 'right'` | `'left'` | Edge it slides from. |
 | `width` | `number` | `0.78` | Fraction of the screen, or points. |
 | `theme` | `SideMenuThemeOverrides` | | Colors and fonts. |
