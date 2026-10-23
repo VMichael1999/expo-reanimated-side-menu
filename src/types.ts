@@ -9,6 +9,8 @@ export interface SideMenuItem {
   key: string;
   label: string;
   icon?: SideMenuIcon;
+  /** Color of the label and icon. Defaults to `theme.text`. */
+  color?: string;
   /** Runs once the menu has finished closing, so the next screen never fights the animation. */
   onPress: () => void;
   /** Small pill on the right, e.g. a counter of unread notifications. */
@@ -78,6 +80,16 @@ export type SideMenuThemeOverrides = Partial<Omit<SideMenuTheme, 'fonts'>> & {
   fonts?: SideMenuFonts;
 };
 
+/** Handed to your own `header`, `footer` and `content` so they can close the menu. */
+export interface SideMenuHelpers {
+  close: () => void;
+  /** Closes the menu and runs `action` once it is out of the way. */
+  closeThen: (action: () => void) => void;
+}
+
+/** Your own content: an element, or a function that receives the helpers. */
+export type SideMenuSlot = ReactNode | ((helpers: SideMenuHelpers) => ReactNode);
+
 export type SideMenuSceneEffect = 'tilt' | 'slide' | 'none';
 
 /** How your screen (the `children`) moves aside while the menu opens. */
@@ -104,15 +116,19 @@ export interface SideMenuProps {
   /** Your screen. With it, the screen moves aside with the `scene` effect while the menu opens. */
   children?: ReactNode;
   scene?: SideMenuScene;
-  sections: SideMenuSection[];
+  sections?: SideMenuSection[];
   profile?: SideMenuProfile;
   /** Replaces the profile header with your own content. */
-  header?: ReactNode;
+  header?: SideMenuSlot;
   /** Highlighted button under the sections, e.g. to switch between two modes of the app. */
   action?: SideMenuAction;
   logout?: SideMenuLogout;
   /** Small centered text at the bottom, e.g. the app version. */
   footerText?: string;
+  /** Your own content at the very bottom of the panel. */
+  footer?: SideMenuSlot;
+  /** Replaces everything inside the panel with your own content. */
+  content?: SideMenuSlot;
   /** Edge the menu slides in from. Defaults to `left`. */
   side?: 'left' | 'right';
   /** A fraction of the screen (`0.78`) or a width in points (`300`). Defaults to `0.78`. */

@@ -1,6 +1,6 @@
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { useState } from 'react';
-import { Text } from 'react-native';
+import { Pressable, Text } from 'react-native';
 
 import { SideMenu } from '../SideMenu';
 import type { SideMenuProps } from '../types';
@@ -77,10 +77,36 @@ describe('SideMenu', () => {
 
   it('renders the screen it wraps', async () => {
     await render(
-      <SideMenu visible={false} onClose={jest.fn()} sections={[]}>
+      <SideMenu visible={false} onClose={jest.fn()}>
         <Text>Home screen</Text>
       </SideMenu>
     );
     expect(screen.getByText('Home screen')).toBeTruthy();
+  });
+
+  it('replaces the whole panel with your own content', async () => {
+    await render(<Harness content={<Text>Custom panel</Text>} logout={{ onPress: jest.fn() }} />);
+    expect(screen.getByText('Custom panel')).toBeTruthy();
+    expect(screen.queryByText('My profile')).toBeNull();
+    expect(screen.queryByText('Log out')).toBeNull();
+  });
+
+  it('gives your own footer a way to close the menu first', async () => {
+    const onPress = jest.fn();
+    await render(
+      <Harness
+        footer={({ closeThen }) => (
+          <Pressable onPress={() => closeThen(onPress)}>
+            <Text>Help</Text>
+          </Pressable>
+        )}
+      />
+    );
+    await fireEvent.press(screen.getByText('Help'));
+    expect(onPress).not.toHaveBeenCalled();
+    await act(async () => {
+      jest.runAllTimers();
+    });
+    expect(onPress).toHaveBeenCalledTimes(1);
   });
 });

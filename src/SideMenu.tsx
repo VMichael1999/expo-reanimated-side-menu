@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
   type ReactElement,
+  type ReactNode,
 } from 'react';
 import {
   Image,
@@ -33,7 +34,7 @@ import { SafeAreaInsetsContext, initialWindowMetrics } from 'react-native-safe-a
 
 import { MenuIcon } from './MenuIcon';
 import { fontStyle, isDarkColor, resolveScene, resolveTheme, resolveWidth } from './theme';
-import type { SideMenuProps } from './types';
+import type { SideMenuHelpers, SideMenuProps, SideMenuSlot } from './types';
 
 const NO_INSETS = { top: 0, bottom: 0, left: 0, right: 0 };
 /** Share of the panel that has to be dragged away before letting go closes it. */
@@ -45,12 +46,14 @@ export function SideMenu({
   onClose,
   children,
   scene,
-  sections,
+  sections = [],
   profile,
   header,
   action,
   logout,
   footerText,
+  footer,
+  content,
   side = 'left',
   width = 0.78,
   theme: themeOverrides,
@@ -175,6 +178,9 @@ export function SideMenu({
     pendingAction.current = next;
     onClose();
   };
+  const helpers: SideMenuHelpers = { close: onClose, closeThen };
+  const renderSlot = (slot: SideMenuSlot): ReactNode =>
+    typeof slot === 'function' ? slot(helpers) : slot;
 
   const regular = fontStyle(theme.fonts.regular, '400');
   const semibold = fontStyle(theme.fonts.semibold, '600');
@@ -226,143 +232,160 @@ export function SideMenu({
                 styles.content,
                 { paddingTop: insets.top + 8, paddingBottom: insets.bottom + 8 },
               ]}>
-              {header ??
-                (profile ? (
-                  <Pressable
-                    style={styles.profile}
-                    onPress={profile.onPress ? () => closeThen(profile.onPress!) : undefined}
-                    disabled={!profile.onPress}
-                    accessibilityRole={profile.onPress ? 'button' : undefined}
-                    accessibilityLabel={profile.accessibilityLabel ?? profile.title}>
-                    <View style={[styles.avatar, { backgroundColor: theme.avatarBackground }]}>
-                      <Avatar avatar={profile.avatar} color={theme.text} />
-                    </View>
-                    <View style={styles.profileText}>
-                      <Text
-                        style={[styles.profileTitle, bold, { color: theme.text }]}
-                        numberOfLines={1}>
-                        {profile.title}
-                      </Text>
-                      {profile.subtitle ? (
+              {content !== undefined ? (
+                renderSlot(content)
+              ) : (
+                <>
+                  {header !== undefined ? (
+                    renderSlot(header)
+                  ) : profile ? (
+                    <Pressable
+                      style={styles.profile}
+                      onPress={profile.onPress ? () => closeThen(profile.onPress!) : undefined}
+                      disabled={!profile.onPress}
+                      accessibilityRole={profile.onPress ? 'button' : undefined}
+                      accessibilityLabel={profile.accessibilityLabel ?? profile.title}>
+                      <View style={[styles.avatar, { backgroundColor: theme.avatarBackground }]}>
+                        <Avatar avatar={profile.avatar} color={theme.text} />
+                      </View>
+                      <View style={styles.profileText}>
                         <Text
-                          style={[styles.profileSubtitle, regular, { color: theme.textSecondary }]}
+                          style={[styles.profileTitle, bold, { color: theme.text }]}
                           numberOfLines={1}>
-                          {profile.subtitle}
+                          {profile.title}
                         </Text>
+                        {profile.subtitle ? (
+                          <Text
+                            style={[
+                              styles.profileSubtitle,
+                              regular,
+                              { color: theme.textSecondary },
+                            ]}
+                            numberOfLines={1}>
+                            {profile.subtitle}
+                          </Text>
+                        ) : null}
+                      </View>
+                      {profile.onPress ? (
+                        <Ionicons name="chevron-forward" size={20} color={theme.text} />
                       ) : null}
-                    </View>
-                    {profile.onPress ? (
-                      <Ionicons name="chevron-forward" size={20} color={theme.text} />
-                    ) : null}
-                  </Pressable>
-                ) : null)}
+                    </Pressable>
+                  ) : null}
 
-              {header || profile ? (
-                <View style={[styles.divider, { backgroundColor: theme.divider }]} />
-              ) : null}
+                  {header !== undefined || profile ? (
+                    <View style={[styles.divider, { backgroundColor: theme.divider }]} />
+                  ) : null}
 
-              <ScrollView
-                scrollEnabled={contentHeight > listHeight + 1}
-                bounces={false}
-                onLayout={(event) => setListHeight(event.nativeEvent.layout.height)}
-                onContentSizeChange={(_, height) => setContentHeight(height)}
-                style={styles.sections}
-                contentContainerStyle={styles.sectionsContent}
-                showsVerticalScrollIndicator={false}>
-                {sections.map((section) => (
-                  <View key={section.key} style={styles.section}>
-                    {section.title ? (
-                      <Text style={[styles.sectionTitle, bold, { color: theme.textMuted }]}>
-                        {section.title}
+                  <ScrollView
+                    scrollEnabled={contentHeight > listHeight + 1}
+                    bounces={false}
+                    onLayout={(event) => setListHeight(event.nativeEvent.layout.height)}
+                    onContentSizeChange={(_, height) => setContentHeight(height)}
+                    style={styles.sections}
+                    contentContainerStyle={styles.sectionsContent}
+                    showsVerticalScrollIndicator={false}>
+                    {sections.map((section) => (
+                      <View key={section.key} style={styles.section}>
+                        {section.title ? (
+                          <Text style={[styles.sectionTitle, bold, { color: theme.textMuted }]}>
+                            {section.title}
+                          </Text>
+                        ) : null}
+                        {section.items.map((item) => (
+                          <Pressable
+                            key={item.key}
+                            onPress={() => closeThen(item.onPress)}
+                            style={({ pressed }) => [
+                              styles.item,
+                              pressed && { backgroundColor: theme.itemPressed },
+                            ]}
+                            accessibilityRole="button"
+                            accessibilityLabel={item.accessibilityLabel ?? item.label}>
+                            {item.icon ? (
+                              <MenuIcon
+                                icon={item.icon}
+                                size={22}
+                                color={item.color ?? theme.text}
+                              />
+                            ) : null}
+                            <Text
+                              style={[styles.itemLabel, bold, { color: item.color ?? theme.text }]}
+                              numberOfLines={1}>
+                              {item.label}
+                            </Text>
+                            {item.badge !== undefined ? (
+                              <View style={[styles.badge, { backgroundColor: theme.accent }]}>
+                                <Text style={[styles.badgeText, bold, { color: theme.onAccent }]}>
+                                  {item.badge}
+                                </Text>
+                              </View>
+                            ) : null}
+                          </Pressable>
+                        ))}
+                      </View>
+                    ))}
+                  </ScrollView>
+
+                  {action ? (
+                    <Pressable
+                      onPress={() => closeThen(action.onPress)}
+                      style={({ pressed }) => [
+                        styles.action,
+                        accentAction
+                          ? { backgroundColor: theme.accent }
+                          : { borderWidth: 1, borderColor: theme.divider },
+                        pressed && styles.actionPressed,
+                      ]}
+                      accessibilityRole="button"
+                      accessibilityLabel={action.accessibilityLabel ?? action.label}>
+                      {action.icon ? (
+                        <MenuIcon icon={action.icon} size={20} color={actionColor} />
+                      ) : null}
+                      <Text
+                        style={[styles.actionLabel, semibold, { color: actionColor }]}
+                        numberOfLines={1}>
+                        {action.label}
                       </Text>
-                    ) : null}
-                    {section.items.map((item) => (
+                      <Ionicons
+                        name="chevron-forward"
+                        size={20}
+                        color={actionColor}
+                        style={styles.actionArrow}
+                      />
+                    </Pressable>
+                  ) : null}
+
+                  {logout ? (
+                    <>
+                      <View style={[styles.divider, { backgroundColor: theme.divider }]} />
                       <Pressable
-                        key={item.key}
-                        onPress={() => closeThen(item.onPress)}
+                        onPress={() => closeThen(logout.onPress)}
                         style={({ pressed }) => [
                           styles.item,
                           pressed && { backgroundColor: theme.itemPressed },
                         ]}
-                        accessibilityRole="button"
-                        accessibilityLabel={item.accessibilityLabel ?? item.label}>
-                        {item.icon ? (
-                          <MenuIcon icon={item.icon} size={22} color={theme.text} />
-                        ) : null}
-                        <Text
-                          style={[styles.itemLabel, bold, { color: theme.text }]}
-                          numberOfLines={1}>
-                          {item.label}
+                        accessibilityRole="button">
+                        <MenuIcon
+                          icon={logout.icon ?? 'log-out-outline'}
+                          size={22}
+                          color={theme.danger}
+                        />
+                        <Text style={[styles.itemLabel, bold, { color: theme.danger }]}>
+                          {logout.label ?? 'Log out'}
                         </Text>
-                        {item.badge !== undefined ? (
-                          <View style={[styles.badge, { backgroundColor: theme.accent }]}>
-                            <Text style={[styles.badgeText, bold, { color: theme.onAccent }]}>
-                              {item.badge}
-                            </Text>
-                          </View>
-                        ) : null}
                       </Pressable>
-                    ))}
-                  </View>
-                ))}
-              </ScrollView>
-
-              {action ? (
-                <Pressable
-                  onPress={() => closeThen(action.onPress)}
-                  style={({ pressed }) => [
-                    styles.action,
-                    accentAction
-                      ? { backgroundColor: theme.accent }
-                      : { borderWidth: 1, borderColor: theme.divider },
-                    pressed && styles.actionPressed,
-                  ]}
-                  accessibilityRole="button"
-                  accessibilityLabel={action.accessibilityLabel ?? action.label}>
-                  {action.icon ? (
-                    <MenuIcon icon={action.icon} size={20} color={actionColor} />
+                    </>
                   ) : null}
-                  <Text
-                    style={[styles.actionLabel, semibold, { color: actionColor }]}
-                    numberOfLines={1}>
-                    {action.label}
-                  </Text>
-                  <Ionicons
-                    name="chevron-forward"
-                    size={20}
-                    color={actionColor}
-                    style={styles.actionArrow}
-                  />
-                </Pressable>
-              ) : null}
 
-              {logout ? (
-                <>
-                  <View style={[styles.divider, { backgroundColor: theme.divider }]} />
-                  <Pressable
-                    onPress={() => closeThen(logout.onPress)}
-                    style={({ pressed }) => [
-                      styles.item,
-                      pressed && { backgroundColor: theme.itemPressed },
-                    ]}
-                    accessibilityRole="button">
-                    <MenuIcon
-                      icon={logout.icon ?? 'log-out-outline'}
-                      size={22}
-                      color={theme.danger}
-                    />
-                    <Text style={[styles.itemLabel, bold, { color: theme.danger }]}>
-                      {logout.label ?? 'Log out'}
+                  {footerText ? (
+                    <Text style={[styles.footer, regular, { color: theme.textMuted }]}>
+                      {footerText}
                     </Text>
-                  </Pressable>
-                </>
-              ) : null}
+                  ) : null}
 
-              {footerText ? (
-                <Text style={[styles.footer, regular, { color: theme.textMuted }]}>
-                  {footerText}
-                </Text>
-              ) : null}
+                  {footer !== undefined ? renderSlot(footer) : null}
+                </>
+              )}
             </View>
           </Animated.View>
         </View>

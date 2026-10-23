@@ -3,6 +3,7 @@ export { defaultTheme } from './theme';
 export type {
   SideMenuAction,
   SideMenuFonts,
+  SideMenuHelpers,
   SideMenuIcon,
   SideMenuItem,
   SideMenuLogout,
@@ -11,6 +12,7 @@ export type {
   SideMenuScene,
   SideMenuSceneEffect,
   SideMenuSection,
+  SideMenuSlot,
   SideMenuTheme,
   SideMenuThemeOverrides,
 } from './types';
