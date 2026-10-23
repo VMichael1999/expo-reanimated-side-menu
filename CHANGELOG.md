@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.2 (2026-10-23)
+
+### 🐛 Fixes
+
+- Switching from the `rail` variant to any other one with the menu closed no longer leaves an invisible layer over the screen that blocked every touch.
+
 ## 0.2.1 (2026-10-23)
 
 ### 📝 Docs
