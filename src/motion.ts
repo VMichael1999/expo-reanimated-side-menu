@@ -42,9 +42,11 @@ export function useMenuProgress({
   const mountedRef = useRef(visible || keepMounted);
   const progress = useSharedValue(visible ? 1 : 0);
   const pending = useRef<(() => void) | null>(null);
+  const keepMountedRef = useRef(keepMounted);
+  keepMountedRef.current = keepMounted;
 
   const finishClose = () => {
-    if (!keepMounted) {
+    if (!keepMountedRef.current) {
       mountedRef.current = false;
       setMounted(false);
     }
@@ -71,6 +73,25 @@ export function useMenuProgress({
     // finishClose only reads refs and setters, so a stale copy behaves the same.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible, openDuration, closeDuration, progress]);
+
+  // Switching to or from the rail (the only variant that stays on screen while closed): a closed
+  // menu that was kept mounted for the rail must unmount, or the next variant would treat it as
+  // open and lay its tap-to-close layer over the screen.
+  useEffect(() => {
+    if (keepMounted) {
+      mountedRef.current = true;
+      setMounted(true);
+      return;
+    }
+    if (!visible && mountedRef.current) {
+      cancelAnimation(progress);
+      progress.value = 0;
+      mountedRef.current = false;
+      setMounted(false);
+    }
+    // Only a change of keepMounted matters here; `visible` is handled above.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [keepMounted]);
 
   const queue = (action: () => void) => {
     pending.current = action;
