@@ -1,4 +1,4 @@
-import type { SideMenuTheme, SideMenuThemeOverrides } from './types';
+import type { SideMenuScene, SideMenuTheme, SideMenuThemeOverrides } from './types';
 
 /** Dark panel with a lime accent: the look the menu was designed with. */
 export const defaultTheme: SideMenuTheme = {
@@ -47,4 +47,32 @@ export function isDarkColor(color: string): boolean {
   const [r, g, b] = [0, 2, 4].map((i) => parseInt(full.slice(i, i + 2), 16));
   // Perceived brightness (ITU-R BT.601).
   return r * 0.299 + g * 0.587 + b * 0.114 < 150;
+}
+
+export interface ResolvedScene {
+  offset: number;
+  scale: number;
+  rotate: number;
+  borderRadius: number;
+}
+
+/** The screen shifted, shrunk and turned in 3D: the look the menu was designed with. */
+const TILT = { offset: 0.54, scale: 0.86, rotate: 9, borderRadius: 24 };
+
+/** The scene effect in points, or `null` when the screen should stay where it is. */
+export function resolveScene(
+  scene: SideMenuScene | undefined,
+  panelWidth: number,
+  screenWidth: number
+): ResolvedScene | null {
+  const effect = scene?.effect ?? 'tilt';
+  if (effect === 'none') return null;
+  const preset =
+    effect === 'slide' ? { offset: panelWidth, scale: 1, rotate: 0, borderRadius: 0 } : TILT;
+  return {
+    offset: resolveWidth(scene?.offset ?? preset.offset, screenWidth),
+    scale: scene?.scale ?? preset.scale,
+    rotate: Math.abs(scene?.rotate ?? preset.rotate),
+    borderRadius: scene?.borderRadius ?? preset.borderRadius,
+  };
 }

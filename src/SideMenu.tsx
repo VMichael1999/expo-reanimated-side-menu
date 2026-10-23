@@ -32,7 +32,7 @@ import Animated, {
 import { SafeAreaInsetsContext, initialWindowMetrics } from 'react-native-safe-area-context';
 
 import { MenuIcon } from './MenuIcon';
-import { fontStyle, isDarkColor, resolveTheme, resolveWidth } from './theme';
+import { fontStyle, isDarkColor, resolveScene, resolveTheme, resolveWidth } from './theme';
 import type { SideMenuProps } from './types';
 
 const NO_INSETS = { top: 0, bottom: 0, left: 0, right: 0 };
@@ -43,6 +43,8 @@ const SWIPE_CLOSE_VELOCITY = 0.6;
 export function SideMenu({
   visible,
   onClose,
+  children,
+  scene,
   sections,
   profile,
   header,
@@ -147,6 +149,27 @@ export function SideMenu({
     opacity: panelWidth > 0 ? 1 - offset.value / panelWidth : 0,
   }));
 
+  const sceneConfig = useMemo(
+    () => resolveScene(scene, panelWidth, screenWidth),
+    [scene, panelWidth, screenWidth]
+  );
+  const sceneStyle = useAnimatedStyle(() => {
+    if (!sceneConfig) return {};
+    const progress = panelWidth > 0 ? 1 - offset.value / panelWidth : 0;
+    const direction = side === 'left' ? 1 : -1;
+    return {
+      borderRadius: progress * sceneConfig.borderRadius,
+      transform: [
+        { perspective: 900 },
+        { translateX: direction * progress * sceneConfig.offset },
+        { scale: 1 - progress * (1 - sceneConfig.scale) },
+        // Turns the edge next to the panel away from the viewer. On the New Architecture the opposite
+        // sign hides the screen altogether.
+        { rotateY: `${direction * progress * sceneConfig.rotate}deg` },
+      ],
+    };
+  });
+
   /** Closes the menu and runs `next` once it is out of the way. */
   const closeThen = (next: () => void) => {
     pendingAction.current = next;
@@ -159,7 +182,7 @@ export function SideMenu({
   const accentAction = action?.variant !== 'outline';
   const actionColor = accentAction ? theme.onAccent : theme.text;
 
-  return (
+  const menu = (
     <>
       {/* Outside the Modal: on iOS the modal reads the style only when it is presented. Rendered only
           while the menu is mounted, so the app's own style comes back once it closes. */}
@@ -346,6 +369,15 @@ export function SideMenu({
       </Modal>
     </>
   );
+
+  if (children === undefined) return menu;
+  return (
+    // The panel color shows around the screen while it is shifted and turned.
+    <View style={[styles.root, { backgroundColor: theme.background }]}>
+      <Animated.View style={[styles.scene, sceneStyle]}>{children}</Animated.View>
+      {menu}
+    </View>
+  );
 }
 
 function Avatar({ avatar, color }: { avatar?: ImageSourcePropType | ReactElement; color: string }) {
@@ -357,6 +389,10 @@ function Avatar({ avatar, color }: { avatar?: ImageSourcePropType | ReactElement
 const styles = StyleSheet.create({
   root: {
     flex: 1,
+  },
+  scene: {
+    flex: 1,
+    overflow: 'hidden',
   },
   // absoluteFillObject no longer exists in recent React Native, so the edges are spelled out.
   backdrop: {

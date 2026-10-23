@@ -1,5 +1,6 @@
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { useState } from 'react';
+import { Text } from 'react-native';
 
 import { SideMenu } from '../SideMenu';
 import type { SideMenuProps } from '../types';
@@ -72,5 +73,14 @@ describe('SideMenu', () => {
     await render(<SideMenu visible onClose={onClose} sections={[]} closeLabel="Close" />);
     await fireEvent.press(screen.getByLabelText('Close'));
     expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
+  it('renders the screen it wraps', async () => {
+    await render(
+      <SideMenu visible={false} onClose={jest.fn()} sections={[]}>
+        <Text>Home screen</Text>
+      </SideMenu>
+    );
+    expect(screen.getByText('Home screen')).toBeTruthy();
   });
 });

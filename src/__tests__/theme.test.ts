@@ -1,4 +1,11 @@
-import { defaultTheme, fontStyle, isDarkColor, resolveTheme, resolveWidth } from '../theme';
+import {
+  defaultTheme,
+  fontStyle,
+  isDarkColor,
+  resolveScene,
+  resolveTheme,
+  resolveWidth,
+} from '../theme';
 
 describe('resolveTheme', () => {
   it('returns the default theme without overrides', () => {
@@ -46,5 +53,37 @@ describe('isDarkColor', () => {
 
   it('treats colors it cannot read as dark', () => {
     expect(isDarkColor('rgb(255, 255, 255)')).toBe(true);
+  });
+});
+
+describe('resolveScene', () => {
+  it('tilts the screen by default', () => {
+    expect(resolveScene(undefined, 312, 400)).toEqual({
+      offset: 216,
+      scale: 0.86,
+      rotate: 9,
+      borderRadius: 24,
+    });
+  });
+
+  it('pushes the screen by the panel width with slide', () => {
+    expect(resolveScene({ effect: 'slide' }, 312, 400)).toEqual({
+      offset: 312,
+      scale: 1,
+      rotate: 0,
+      borderRadius: 0,
+    });
+  });
+
+  it('keeps the screen still with none', () => {
+    expect(resolveScene({ effect: 'none' }, 312, 400)).toBeNull();
+  });
+
+  it('lets each value be overridden', () => {
+    expect(resolveScene({ rotate: 0, offset: 100 }, 312, 400)).toMatchObject({
+      offset: 100,
+      rotate: 0,
+      scale: 0.86,
+    });
   });
 });

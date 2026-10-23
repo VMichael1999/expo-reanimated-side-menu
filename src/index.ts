@@ -8,6 +8,8 @@ export type {
   SideMenuLogout,
   SideMenuProfile,
   SideMenuProps,
+  SideMenuScene,
+  SideMenuSceneEffect,
   SideMenuSection,
   SideMenuTheme,
   SideMenuThemeOverrides,

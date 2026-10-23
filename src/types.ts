@@ -78,10 +78,32 @@ export type SideMenuThemeOverrides = Partial<Omit<SideMenuTheme, 'fonts'>> & {
   fonts?: SideMenuFonts;
 };
 
+export type SideMenuSceneEffect = 'tilt' | 'slide' | 'none';
+
+/** How your screen (the `children`) moves aside while the menu opens. */
+export interface SideMenuScene {
+  /**
+   * `tilt` shifts, shrinks and turns the screen in 3D (the default); `slide` only pushes it aside
+   * by the panel's width; `none` leaves it where it is.
+   */
+  effect?: SideMenuSceneEffect;
+  /** How far the screen moves: a fraction of the screen (`0.54`) or points. */
+  offset?: number;
+  /** Size of the screen when the menu is open, from 0 to 1. */
+  scale?: number;
+  /** How much the screen turns away from the panel, in degrees. */
+  rotate?: number;
+  /** Corner radius of the screen when the menu is open. */
+  borderRadius?: number;
+}
+
 export interface SideMenuProps {
   visible: boolean;
   /** Called when the backdrop is tapped, the menu is swiped away or the Android back button is pressed. */
   onClose: () => void;
+  /** Your screen. With it, the screen moves aside with the `scene` effect while the menu opens. */
+  children?: ReactNode;
+  scene?: SideMenuScene;
   sections: SideMenuSection[];
   profile?: SideMenuProfile;
   /** Replaces the profile header with your own content. */
