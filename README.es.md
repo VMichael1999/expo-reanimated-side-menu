@@ -10,8 +10,6 @@ Un menú lateral cuidado para **Expo** y **React Native** con **ocho estilos** e
 
 ## Capturas de pantalla
 
-Tomadas con la [app de ejemplo](#app-de-ejemplo), el panel de una tienda en línea, en un simulador iPhone 17 Pro Max.
-
 | `overlay` | `reveal` | `cards` | `flip` |
 | :---: | :---: | :---: | :---: |
 | <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/overlay.png" width="170" alt="Panel encima del dashboard, que gira en 3D detrás"/> | <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/reveal.png" width="170" alt="El dashboard se aparta y se achica para mostrar el menú"/> | <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/cards.png" width="170" alt="El dashboard inclinado como una carta con dos cartas fantasma detrás"/> | <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/flip.png" width="170" alt="El dashboard girado 45 grados en 3D"/> |

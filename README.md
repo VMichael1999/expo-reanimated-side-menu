@@ -10,8 +10,6 @@ A polished side menu for **Expo** and **React Native** with **eight presentation
 
 ## Screenshots
 
-Taken with the [example app](#example-app), an online-store dashboard, on an iPhone 17 Pro Max simulator.
-
 | `overlay` | `reveal` | `cards` | `flip` |
 | :---: | :---: | :---: | :---: |
 | <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/overlay.png" width="170" alt="Panel over the dashboard, which turns in 3D behind it"/> | <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/reveal.png" width="170" alt="The dashboard slides away and shrinks to reveal the menu"/> | <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/cards.png" width="170" alt="The dashboard tilted like a card with two ghost cards behind"/> | <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/flip.png" width="170" alt="The dashboard swung 45 degrees in 3D"/> |
