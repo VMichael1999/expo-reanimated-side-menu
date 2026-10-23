@@ -187,8 +187,8 @@ function Demo() {
       sections={sections}
       selectedKey={screen}
       profile={{
-        title: 'Andrea Ríos',
-        subtitle: 'andrea@tiendanova.pe',
+        title: 'Michael Valdiviezo',
+        subtitle: 'michael@tiendanova.pe',
         avatar: <Initials theme={theme} />,
         onPress: go('profile'),
       }}
@@ -262,7 +262,7 @@ function RailHeader({ theme, helpers }: { theme: SideMenuTheme; helpers: SideMen
 }
 
 function Initials({ theme }: { theme: SideMenuTheme }) {
-  return <Text style={[styles.initials, { color: theme.text }]}>AR</Text>;
+  return <Text style={[styles.initials, { color: theme.text }]}>MV</Text>;
 }
 
 interface DashboardProps {
@@ -351,7 +351,7 @@ function Dashboard({
       <ScrollView
         contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + 24 }]}
         showsVerticalScrollIndicator={false}>
-        <Text style={styles.greeting}>Hola, Andrea 👋</Text>
+        <Text style={styles.greeting}>Hola, Michael 👋</Text>
         <Text style={styles.muted}>Así va tu tienda esta semana.</Text>
 
         <View style={styles.kpis}>

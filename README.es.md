@@ -86,7 +86,7 @@ export function Panel({ navigation }) {
       visible={abierto}
       onClose={() => setAbierto(false)}
       selectedKey={pantalla}
-      profile={{ title: 'Andrea Ríos', subtitle: 'andrea@tienda.pe', onPress: ir('perfil') }}
+      profile={{ title: 'Michael Valdiviezo', subtitle: 'michael@tienda.pe', onPress: ir('perfil') }}
       sections={[
         {
           key: 'main',

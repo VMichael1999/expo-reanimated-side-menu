@@ -86,7 +86,7 @@ export function Dashboard({ navigation }) {
       visible={open}
       onClose={() => setOpen(false)}
       selectedKey={screen}
-      profile={{ title: 'Andrea Ríos', subtitle: 'andrea@store.com', onPress: go('profile') }}
+      profile={{ title: 'Michael Valdiviezo', subtitle: 'michael@store.com', onPress: go('profile') }}
       sections={[
         {
           key: 'main',
