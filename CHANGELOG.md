@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.1 (2026-10-23)
+
+### 📝 Docs
+
+- New screenshots of every style.
+- Simpler styles table in the README.
+
 ## 0.2.0 (2026-10-23)
 
 ### 🎉 New features
