@@ -175,12 +175,15 @@ Each section has a `key`, an optional `title` and its `items`. An item's `icon` 
 
 Everything inside the panel is yours to choose.
 
-**1. Pick the blocks and their order.** `order` lists the blocks from top to bottom; whatever you leave out is hidden:
+**1. Pick the blocks, their order and the lines between them.** `order` lists the blocks from top to bottom; whatever you leave out is hidden, and `divider` draws a line wherever you put it, as many times as you like:
 
 ```tsx
-// Default: ['header', 'sections', 'action', 'logout', 'profile', 'footerText', 'footer']
-<SideMenu order={['footer', 'sections', 'action', 'header']} ... />
+<SideMenu order={['header', 'divider', 'sections', 'action']} ... />          // no logout, one line
+<SideMenu order={['logout', 'divider', 'header', 'sections', 'footer']} ... /> // logout on top
+<SideMenu order={['header', 'sections', 'logout']} ... />                      // no lines at all
 ```
+
+With your own `order`, only the dividers you list are drawn. Without it, every block is shown, with a line under the header and another above the logout row.
 
 | Block | What it draws |
 | --- | --- |
@@ -191,6 +194,9 @@ Everything inside the panel is yours to choose.
 | `profile` | The profile card, when `profile.position` is `'bottom'` |
 | `footerText` | The small footer text |
 | `footer` | Your `footer` |
+| `divider` | A line; repeat it as often as you want |
+
+A section can also draw a line above itself with `divider: true` (or drop the one the rail adds with `divider: false`).
 
 **2. Put anything between the sections.** A section can hold your own `content`, under its items or on its own:
 

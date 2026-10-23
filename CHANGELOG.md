@@ -4,7 +4,8 @@
 
 ### 🎉 New features
 
-- `order`: choose which blocks of the panel are shown and in what order (`header`, `sections`, `action`, `logout`, `profile`, `footerText`, `footer`).
+- `order`: choose which blocks of the panel are shown and in what order (`header`, `sections`, `action`, `logout`, `profile`, `footerText`, `footer`), and place `divider` lines wherever you want, as many as you want. With your own `order`, only the dividers you list are drawn.
+- `divider` on a section draws a line above it.
 - Sections can hold your own `content`, under their items or on their own as a free block between sections; `items` is now optional.
 - Items: `subtitle`, `trailing` (any element at the end of the row, e.g. a switch), `render` (draw the whole row yourself) and an optional `onPress` for rows that are not pressable.
 - `panelStyle`: padding, background and borders of the panel's inner container.

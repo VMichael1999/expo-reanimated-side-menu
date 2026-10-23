@@ -176,12 +176,15 @@ Cada sección tiene una `key`, un `title` opcional y sus `items`. El `icon` de u
 
 Todo lo que hay dentro del panel lo eliges tú.
 
-**1. Elige los bloques y su orden.** `order` lista los bloques de arriba hacia abajo; lo que dejes fuera no se muestra:
+**1. Elige los bloques, su orden y las líneas entre ellos.** `order` lista los bloques de arriba hacia abajo; lo que dejes fuera no se muestra, y `divider` dibuja una línea donde la pongas, todas las veces que quieras:
 
 ```tsx
-// Por defecto: ['header', 'sections', 'action', 'logout', 'profile', 'footerText', 'footer']
-<SideMenu order={['footer', 'sections', 'action', 'header']} ... />
+<SideMenu order={['header', 'divider', 'sections', 'action']} ... />          // sin cerrar sesión, una línea
+<SideMenu order={['logout', 'divider', 'header', 'sections', 'footer']} ... /> // cerrar sesión arriba
+<SideMenu order={['header', 'sections', 'logout']} ... />                      // sin ninguna línea
 ```
+
+Con tu propio `order` solo se dibujan las líneas que pongas. Sin él, se muestran todos los bloques, con una línea bajo la cabecera y otra sobre cerrar sesión.
 
 | Bloque | Qué dibuja |
 | --- | --- |
@@ -192,6 +195,9 @@ Todo lo que hay dentro del panel lo eliges tú.
 | `profile` | La tarjeta de perfil, cuando `profile.position` es `'bottom'` |
 | `footerText` | El texto pequeño del pie |
 | `footer` | Tu `footer` |
+| `divider` | Una línea; repítela todas las veces que quieras |
+
+Una sección también puede dibujar una línea encima con `divider: true` (o quitar la que pone la barra lateral con `divider: false`).
 
 **2. Pon lo que quieras entre las secciones.** Una sección puede llevar tu propio `content`, debajo de sus opciones o sola:
 
