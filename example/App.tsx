@@ -116,6 +116,7 @@ function Demo() {
   const [style, setStyle] = useState<StyleOption>(STYLES[0]);
   const [themeName, setThemeName] = useState<ThemeName | null>(null);
   const [rightSide, setRightSide] = useState(false);
+  const [alerts, setAlerts] = useState(true);
   const theme: SideMenuTheme = themes[themeName ?? style.theme];
 
   const chooseStyle = (option: StyleOption) => {
@@ -146,7 +147,13 @@ function Demo() {
       key: 'insights',
       title: 'Análisis',
       items: [
-        { key: 'reports', label: 'Reportes', icon: 'bar-chart-outline', onPress: go('reports') },
+        {
+          key: 'reports',
+          label: 'Reportes',
+          subtitle: 'Actualizado hace 5 min',
+          icon: 'bar-chart-outline',
+          onPress: go('reports'),
+        },
         {
           key: 'campaigns',
           label: 'Campañas',
@@ -157,6 +164,7 @@ function Demo() {
         },
       ],
     },
+    { key: 'promo', content: <PromoCard theme={theme} /> },
     {
       key: 'account',
       title: 'Cuenta',
@@ -168,6 +176,12 @@ function Demo() {
           badge: 24,
           badgeColor: '#B6F36A',
           onPress: go('notifications'),
+        },
+        {
+          key: 'alerts',
+          label: 'Alertas de stock',
+          icon: 'alert-circle-outline',
+          trailing: <Switch value={alerts} onValueChange={setAlerts} />,
         },
         { key: 'settings', label: 'Ajustes', icon: 'settings-outline', onPress: go('settings') },
       ],
@@ -256,6 +270,21 @@ function RailHeader({ theme, helpers }: { theme: SideMenuTheme; helpers: SideMen
             </Pressable>
           );
         })}
+      </View>
+    </View>
+  );
+}
+
+/** A free block between two sections. */
+function PromoCard({ theme }: { theme: SideMenuTheme }) {
+  return (
+    <View style={[styles.promo, { backgroundColor: theme.accent }]}>
+      <Ionicons name="rocket-outline" size={22} color={theme.onAccent} />
+      <View style={styles.flex}>
+        <Text style={[styles.promoTitle, { color: theme.onAccent }]}>Plan Pro</Text>
+        <Text style={[styles.promoText, { color: theme.onAccent }]}>
+          Reportes avanzados y 0% de comisión
+        </Text>
       </View>
     </View>
   );
@@ -697,6 +726,22 @@ const styles = StyleSheet.create({
   statusText: {
     fontSize: 12,
     fontWeight: '700',
+  },
+  promo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    borderRadius: 14,
+    padding: 14,
+    marginHorizontal: 4,
+  },
+  promoTitle: {
+    fontSize: 15,
+    fontWeight: '700',
+  },
+  promoText: {
+    fontSize: 12.5,
+    opacity: 0.85,
   },
   initials: {
     fontSize: 16,
