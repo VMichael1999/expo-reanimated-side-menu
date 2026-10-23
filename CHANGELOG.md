@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.0 (2026-10-23)
+
+### 🎉 New features
+
+- `order`: choose which blocks of the panel are shown and in what order (`header`, `sections`, `action`, `logout`, `profile`, `footerText`, `footer`).
+- Sections can hold your own `content`, under their items or on their own as a free block between sections; `items` is now optional.
+- Items: `subtitle`, `trailing` (any element at the end of the row, e.g. a switch), `render` (draw the whole row yourself) and an optional `onPress` for rows that are not pressable.
+- `panelStyle`: padding, background and borders of the panel's inner container.
+
 ## 0.1.0 (2026-10-22)
 
 First release of `expo-reanimated-side-menu`, extracted from the side menu built for the Run Rider app and turned into a generic package.

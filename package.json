@@ -1,6 +1,6 @@
 {
   "name": "expo-reanimated-side-menu",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A side menu for Expo and React Native with eight styles: 3D overlay, reveal, cards, flip, push, popup, floating card and docked rail. Reanimated, swipe to close, theming.",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -37,7 +37,10 @@
     "rail",
     "floating"
   ],
-  "repository": "https://github.com/VMichael1999/expo-reanimated-side-menu",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VMichael1999/expo-reanimated-side-menu.git"
+  },
   "bugs": {
     "url": "https://github.com/VMichael1999/expo-reanimated-side-menu/issues"
   },
