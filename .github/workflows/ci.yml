@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# A new push to the same branch cancels the run still in progress
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  js:
+    name: TypeScript, Jest and build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Type-check the package
+        run: npm run typecheck
+
+      - name: Jest
+        run: npm test -- --ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Type-check the example app
+        run: |
+          npm ci --prefix example
+          npx --prefix example tsc --noEmit -p example
