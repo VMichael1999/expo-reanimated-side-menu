@@ -4,6 +4,7 @@ import { useWindowDimensions } from 'react-native';
 import type { EffectFrame } from './effects';
 import { OverlayLayout } from './layouts/Overlay';
 import { MenuStatusBar, type LayoutProps, type PanelOptions } from './layouts/shared';
+import { UnderLayout } from './layouts/Under';
 import { MenuPanel, type PanelLook } from './MenuPanel';
 import { useMenuProgress } from './motion';
 import { isDarkColor, resolveScene, resolveTheme, resolveWidth } from './theme';
@@ -121,6 +122,13 @@ export function SideMenu({
   };
 
   switch (variant) {
+    case 'reveal':
+    case 'cards':
+    case 'flip':
+    case 'push':
+      // Keyed so that switching between these four starts clean: Reanimated keeps the style keys
+      // an effect stops returning (e.g. the panel scale of `reveal`).
+      return <UnderLayout key={variant} {...layout} variant={variant} />;
     default:
       return <OverlayLayout {...layout} />;
   }
