@@ -166,9 +166,8 @@ export function SideMenu({
         { perspective: 900 },
         { translateX: direction * progress * sceneConfig.offset },
         { scale: 1 - progress * (1 - sceneConfig.scale) },
-        // Turns the edge next to the panel away from the viewer. On the New Architecture the opposite
-        // sign hides the screen altogether.
-        { rotateY: `${direction * progress * sceneConfig.rotate}deg` },
+        // The edge next to the panel turns away from the viewer and the outer edge comes closer.
+        { rotateY: `${-direction * progress * sceneConfig.rotate}deg` },
       ],
     };
   });
@@ -397,7 +396,12 @@ export function SideMenu({
   return (
     // The panel color shows around the screen while it is shifted and turned.
     <View style={[styles.root, { backgroundColor: theme.background }]}>
-      <Animated.View style={[styles.scene, sceneStyle]}>{children}</Animated.View>
+      {/* On the New Architecture the background is a layer of its own, and the half of the screen
+          that turns away would be drawn behind it. This plain view keeps the 3D turn inside it;
+          collapsable stops React Native from optimizing it away. */}
+      <View style={styles.root} collapsable={false}>
+        <Animated.View style={[styles.scene, sceneStyle]}>{children}</Animated.View>
+      </View>
       {menu}
     </View>
   );
