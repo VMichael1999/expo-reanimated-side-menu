@@ -1,0 +1,80 @@
+{
+  "name": "expo-reanimated-side-menu",
+  "version": "0.1.0",
+  "description": "A polished side menu (drawer) for Expo and React Native: slides in with Reanimated, swipe to close, sections, profile header, highlighted action and theming.",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "react-native": "src/index.ts",
+  "source": "src/index.ts",
+  "files": [
+    "build",
+    "src",
+    "!src/**/__tests__",
+    "README.md",
+    "README.es.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rm -rf build",
+    "typecheck": "tsc --noEmit",
+    "test": "jest",
+    "prepare": "npm run clean && npm run build",
+    "format": "prettier --write \"src/**/*.{ts,tsx}\" example/App.tsx"
+  },
+  "keywords": [
+    "react-native",
+    "expo",
+    "reanimated",
+    "side-menu",
+    "drawer",
+    "navigation-drawer",
+    "menu",
+    "swipe"
+  ],
+  "repository": "https://github.com/VMichael1999/expo-reanimated-side-menu",
+  "bugs": {
+    "url": "https://github.com/VMichael1999/expo-reanimated-side-menu/issues"
+  },
+  "author": "Michael Valdiviezo <michaelino02@gmail.com> (https://github.com/VMichael1999)",
+  "license": "MIT",
+  "homepage": "https://github.com/VMichael1999/expo-reanimated-side-menu#readme",
+  "peerDependencies": {
+    "@expo/vector-icons": ">=14",
+    "react": "*",
+    "react-native": "*",
+    "react-native-reanimated": ">=3.6",
+    "react-native-safe-area-context": ">=4"
+  },
+  "jest": {
+    "preset": "jest-expo",
+    "roots": [
+      "<rootDir>/src"
+    ],
+    "setupFiles": [
+      "<rootDir>/jest.setup.js"
+    ]
+  },
+  "devDependencies": {
+    "@expo/vector-icons": "^15.1.1",
+    "@testing-library/react-native": "^14.1.0",
+    "@types/jest": "^29.5.14",
+    "@types/react": "~19.3.0",
+    "expo": "~58.0.17",
+    "jest": "^29.7.0",
+    "jest-expo": "~58.0.0",
+    "prettier": "^3.9.10",
+    "react": "^19.3.0",
+    "react-native": "^0.88.0",
+    "react-native-reanimated": "^4.7.1",
+    "react-native-safe-area-context": "~5.10.1",
+    "react-native-worklets": "^0.13.0",
+    "typescript": "~6.0.3"
+  },
+  "dependencies": {
+    "expo-asset": "~58.0.18",
+    "expo-font": "~58.0.9"
+  }
+}

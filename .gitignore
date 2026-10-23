@@ -1,0 +1,11 @@
+node_modules/
+build/
+*.tgz
+*.tsbuildinfo
+.DS_Store
+
+# example app
+example/.expo/
+example/ios/
+example/android/
+example/node_modules/
