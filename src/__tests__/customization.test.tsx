@@ -83,4 +83,57 @@ describe('customization', () => {
     });
     expect(onPress).toHaveBeenCalledTimes(1);
   });
+
+  it('draws only the dividers you list, wherever you list them', async () => {
+    await render(
+      <SideMenu
+        {...base}
+        testID="menu"
+        order={['divider', 'header', 'sections', 'divider', 'divider', 'logout']}
+        header={<Text>Logo</Text>}
+        logout={{ onPress: jest.fn() }}
+        sections={[{ key: 'a', items: [{ key: 'home', label: 'Home', onPress: jest.fn() }] }]}
+      />
+    );
+    expect(screen.getAllByTestId('side-menu-divider')).toHaveLength(3);
+  });
+
+  it('draws no dividers when your order leaves them out', async () => {
+    await render(
+      <SideMenu
+        {...base}
+        order={['header', 'sections', 'logout']}
+        header={<Text>Logo</Text>}
+        logout={{ onPress: jest.fn() }}
+        sections={[{ key: 'a', items: [{ key: 'home', label: 'Home', onPress: jest.fn() }] }]}
+      />
+    );
+    expect(screen.queryAllByTestId('side-menu-divider')).toHaveLength(0);
+  });
+
+  it('keeps the usual lines without an order of your own', async () => {
+    await render(
+      <SideMenu
+        {...base}
+        header={<Text>Logo</Text>}
+        logout={{ onPress: jest.fn() }}
+        sections={[{ key: 'a', items: [{ key: 'home', label: 'Home', onPress: jest.fn() }] }]}
+      />
+    );
+    expect(screen.getAllByTestId('side-menu-divider')).toHaveLength(2);
+  });
+
+  it('puts a line above a section when asked', async () => {
+    await render(
+      <SideMenu
+        {...base}
+        order={['sections']}
+        sections={[
+          { key: 'a', items: [{ key: 'home', label: 'Home', onPress: jest.fn() }] },
+          { key: 'b', divider: true, items: [{ key: 'help', label: 'Help', onPress: jest.fn() }] },
+        ]}
+      />
+    );
+    expect(screen.getAllByTestId('side-menu-divider')).toHaveLength(1);
+  });
 });
