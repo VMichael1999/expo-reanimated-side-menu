@@ -100,4 +100,19 @@ describe('variants', () => {
       selected: true,
     });
   });
+
+  it('leaves the screen usable after switching from the closed rail to another variant', async () => {
+    const view = await render(
+      <SideMenu variant="rail" visible={false} onClose={jest.fn()} closeLabel="Close">
+        <Text>Dashboard</Text>
+      </SideMenu>
+    );
+    await view.rerender(
+      <SideMenu variant="reveal" visible={false} onClose={jest.fn()} closeLabel="Close">
+        <Text>Dashboard</Text>
+      </SideMenu>
+    );
+    expect(screen.queryByLabelText('Close')).toBeNull();
+    expect(screen.queryByText('Orders')).toBeNull();
+  });
 });
