@@ -5,6 +5,7 @@ import type { EffectFrame } from './effects';
 import { FloatingLayout } from './layouts/Floating';
 import { OverlayLayout } from './layouts/Overlay';
 import { PopupLayout } from './layouts/Popup';
+import { RailLayout } from './layouts/Rail';
 import { MenuStatusBar, type LayoutProps, type PanelOptions } from './layouts/shared';
 import { UnderLayout } from './layouts/Under';
 import { MenuPanel, type PanelLook } from './MenuPanel';
@@ -135,6 +136,8 @@ export function SideMenu({
       return <PopupLayout {...layout} />;
     case 'floating':
       return <FloatingLayout {...layout} />;
+    case 'rail':
+      return <RailLayout {...layout} />;
     default:
       return <OverlayLayout {...layout} />;
   }
