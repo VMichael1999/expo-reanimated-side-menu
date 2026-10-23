@@ -6,6 +6,12 @@ First release of `expo-reanimated-side-menu`, extracted from the side menu built
 
 ### 🎉 New features
 
+- `variant`: eight ways to present the same menu. `overlay` (the default), plus React Native versions of the designs of four Flutter packages: `reveal` (flutter_advanced_drawer), `cards`, `flip`, `push` and `popup` (awesome_drawer_bar), `floating` (sidebarx) and `rail` (flutter_side_menu).
+- `floating` folds down to icons only with the button at its foot; `rail` stays on screen, open or compact, with a toggle button and a drag handle on its edge (`rail`, `onOpen`).
+- `selectedKey` highlights the current item; `badgeColor` colors a badge; `profile.position: 'bottom'` draws the profile as a card at the foot of the panel.
+- `themes`: ready-made palettes (`night`, `midnight`, `ocean`, `paper`, `slate`).
+- `backdrop`: drawn behind the screen in the variants where the panel waits behind it.
+
 - `SideMenu`: side panel that slides in with Reanimated over a fading backdrop, inside a `Modal` so it covers the whole app, navigation bars included.
 - `children` and `scene`: the wrapped screen moves aside while the menu opens, turned in 3D (`tilt`, the default), pushed (`slide`) or still (`none`), with adjustable `offset`, `scale`, `rotate` and `borderRadius`.
 - Swipe the panel towards its edge to close it (`swipeToClose`), or tap the backdrop, or press the Android back button.
