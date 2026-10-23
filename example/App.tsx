@@ -1,34 +1,106 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   SideMenu,
-  type SideMenuSceneEffect,
+  themes,
+  type SideMenuHelpers,
   type SideMenuSection,
-  type SideMenuThemeOverrides,
+  type SideMenuTheme,
+  type SideMenuVariant,
 } from 'expo-reanimated-side-menu';
 
-const LIGHT_THEME: SideMenuThemeOverrides = {
-  background: '#FFFFFF',
-  text: '#111519',
-  textSecondary: '#5B6470',
-  textMuted: '#8A939E',
-  divider: '#E6E9ED',
-  avatarBackground: '#EEF1F4',
-  itemPressed: '#F2F4F6',
-  accent: '#3D5AFE',
-  onAccent: '#FFFFFF',
-  danger: '#E5484D',
-  backdrop: 'rgba(17, 21, 25, 0.35)',
-};
+type ThemeName = keyof typeof themes;
 
-const EFFECTS: { value: SideMenuSceneEffect; label: string }[] = [
-  { value: 'tilt', label: 'Inclinado' },
-  { value: 'slide', label: 'Deslizar' },
-  { value: 'none', label: 'Ninguno' },
+interface StyleOption {
+  variant: SideMenuVariant;
+  name: string;
+  description: string;
+  icon: keyof typeof Ionicons.glyphMap;
+  /** The palette each style is shown with, taken from the design that inspired it. */
+  theme: ThemeName;
+}
+
+const STYLES: StyleOption[] = [
+  {
+    variant: 'overlay',
+    name: 'Inclinado 3D',
+    description: 'El panel encima y la pantalla girada en 3D',
+    icon: 'cube-outline',
+    theme: 'night',
+  },
+  {
+    variant: 'reveal',
+    name: 'Revelar',
+    description: 'La pantalla se corre y deja ver el menú detrás',
+    icon: 'albums-outline',
+    theme: 'slate',
+  },
+  {
+    variant: 'cards',
+    name: 'Cartas',
+    description: 'La pantalla se inclina como una carta, con dos detrás',
+    icon: 'copy-outline',
+    theme: 'night',
+  },
+  {
+    variant: 'flip',
+    name: 'Giro',
+    description: 'La pantalla gira 45° sobre su borde',
+    icon: 'sync-outline',
+    theme: 'midnight',
+  },
+  {
+    variant: 'push',
+    name: 'Empujar',
+    description: 'El panel entra y empuja la pantalla',
+    icon: 'arrow-forward-outline',
+    theme: 'paper',
+  },
+  {
+    variant: 'popup',
+    name: 'Pantalla completa',
+    description: 'El menú ocupa todo y aparece creciendo',
+    icon: 'expand-outline',
+    theme: 'midnight',
+  },
+  {
+    variant: 'floating',
+    name: 'Flotante',
+    description: 'Tarjeta flotante que se pliega a solo iconos',
+    icon: 'browsers-outline',
+    theme: 'midnight',
+  },
+  {
+    variant: 'rail',
+    name: 'Barra lateral',
+    description: 'Siempre a la vista; se abre o queda compacta',
+    icon: 'reorder-four-outline',
+    theme: 'paper',
+  },
 ];
+
+const THEMES: { name: ThemeName; label: string }[] = [
+  { name: 'night', label: 'Noche' },
+  { name: 'midnight', label: 'Morado' },
+  { name: 'ocean', label: 'Azul' },
+  { name: 'paper', label: 'Blanco' },
+  { name: 'slate', label: 'Pizarra' },
+];
+
+const SCREEN_TITLES: Record<string, string> = {
+  home: 'Inicio',
+  orders: 'Pedidos',
+  products: 'Productos',
+  customers: 'Clientes',
+  reports: 'Reportes',
+  campaigns: 'Campañas',
+  notifications: 'Notificaciones',
+  settings: 'Ajustes',
+  profile: 'Mi cuenta',
+};
 
 export default function App() {
   return (
@@ -40,287 +112,538 @@ export default function App() {
 
 function Demo() {
   const [open, setOpen] = useState(false);
-  const [screen, setScreen] = useState('Mapa');
-  const [effect, setEffect] = useState<SideMenuSceneEffect>('tilt');
+  const [screen, setScreen] = useState('home');
+  const [style, setStyle] = useState<StyleOption>(STYLES[0]);
+  const [themeName, setThemeName] = useState<ThemeName | null>(null);
   const [rightSide, setRightSide] = useState(false);
-  const [light, setLight] = useState(false);
-  const [delivery, setDelivery] = useState(false);
+  const theme: SideMenuTheme = themes[themeName ?? style.theme];
 
-  const go = (name: string) => () => setScreen(name);
+  const chooseStyle = (option: StyleOption) => {
+    setOpen(false);
+    setStyle(option);
+    setThemeName(null);
+  };
+
+  const go = (key: string) => () => setScreen(key);
   const sections: SideMenuSection[] = [
     {
       key: 'main',
-      title: 'Navegación',
+      title: 'Principal',
       items: [
-        { key: 'map', label: 'Mapa', icon: 'home-outline', onPress: go('Mapa') },
-        { key: 'trips', label: 'Mis viajes', icon: 'time-outline', onPress: go('Mis viajes') },
+        { key: 'home', label: 'Inicio', icon: 'grid-outline', onPress: go('home') },
         {
-          key: 'schedule',
-          label: 'Programar viaje',
-          icon: 'alarm-outline',
-          onPress: go('Programar viaje'),
+          key: 'orders',
+          label: 'Pedidos',
+          icon: 'receipt-outline',
+          badge: 12,
+          onPress: go('orders'),
+        },
+        { key: 'products', label: 'Productos', icon: 'cube-outline', onPress: go('products') },
+        { key: 'customers', label: 'Clientes', icon: 'people-outline', onPress: go('customers') },
+      ],
+    },
+    {
+      key: 'insights',
+      title: 'Análisis',
+      items: [
+        { key: 'reports', label: 'Reportes', icon: 'bar-chart-outline', onPress: go('reports') },
+        {
+          key: 'campaigns',
+          label: 'Campañas',
+          icon: 'megaphone-outline',
+          badge: 3,
+          badgeColor: '#FFC21A',
+          onPress: go('campaigns'),
         },
       ],
     },
     {
-      key: 'wallet',
-      title: 'Pagos y promociones',
+      key: 'account',
+      title: 'Cuenta',
       items: [
         {
-          key: 'payment',
-          label: 'Métodos de pago',
-          icon: 'card-outline',
-          onPress: go('Métodos de pago'),
+          key: 'notifications',
+          label: 'Notificaciones',
+          icon: 'notifications-outline',
+          badge: 24,
+          badgeColor: '#B6F36A',
+          onPress: go('notifications'),
         },
-        {
-          key: 'promos',
-          label: 'Promociones',
-          icon: 'pricetag-outline',
-          badge: 2,
-          onPress: go('Promociones'),
-        },
-      ],
-    },
-    {
-      key: 'personal',
-      title: 'Personales',
-      items: [
-        {
-          key: 'favorites',
-          label: 'Direcciones favoritas',
-          icon: 'bookmark-outline',
-          onPress: go('Direcciones favoritas'),
-        },
-      ],
-    },
-    {
-      key: 'preferences',
-      title: 'Preferencias',
-      items: [
-        {
-          key: 'settings',
-          label: 'Configuración',
-          icon: 'settings-outline',
-          onPress: go('Configuración'),
-        },
+        { key: 'settings', label: 'Ajustes', icon: 'settings-outline', onPress: go('settings') },
       ],
     },
   ];
 
+  const isRail = style.variant === 'rail';
+
   return (
     <SideMenu
+      variant={style.variant}
       visible={open}
       onClose={() => setOpen(false)}
-      scene={{ effect }}
+      onOpen={() => setOpen(true)}
       side={rightSide ? 'right' : 'left'}
-      theme={light ? LIGHT_THEME : undefined}
-      profile={{ title: 'Mi perfil', subtitle: '+51 999 999 888', onPress: go('Mi perfil') }}
+      theme={theme}
       sections={sections}
-      action={{
-        label: delivery ? 'Volver a viajes' : 'Modo delivery',
-        icon: delivery ? 'car-outline' : 'bag-outline',
-        variant: delivery ? 'outline' : 'accent',
-        onPress: () => setDelivery((current) => !current),
+      selectedKey={screen}
+      profile={{
+        title: 'Andrea Ríos',
+        subtitle: 'andrea@tiendanova.pe',
+        avatar: <Initials theme={theme} />,
+        onPress: go('profile'),
       }}
-      logout={{ label: 'Cerrar sesión', onPress: go('Sesión cerrada') }}
-      footerText="Versión 1.0.0"
+      header={isRail ? (helpers) => <RailHeader theme={theme} helpers={helpers} /> : undefined}
+      action={
+        isRail
+          ? undefined
+          : { label: 'Nueva venta', icon: 'add-circle-outline', onPress: go('orders') }
+      }
+      logout={isRail ? undefined : { label: 'Cerrar sesión', onPress: go('home') }}
+      footerText="Tienda Nova · v2.4"
       closeLabel="Cerrar menú">
-      <HomeScreen
-        title={screen}
-        mode={delivery ? 'delivery' : 'viajes'}
-        onOpenMenu={() => setOpen(true)}
-        effect={effect}
-        onEffect={setEffect}
+      <Dashboard
+        title={SCREEN_TITLES[screen]}
+        onMenu={() => setOpen((current) => !current)}
+        menuOpen={open}
+        style={style}
+        onStyle={chooseStyle}
+        themeName={themeName ?? style.theme}
+        onTheme={setThemeName}
         rightSide={rightSide}
-        onRightSide={() => setRightSide((current) => !current)}
-        light={light}
-        onLight={() => setLight((current) => !current)}
+        onRightSide={setRightSide}
       />
     </SideMenu>
   );
 }
 
-interface HomeScreenProps {
-  title: string;
-  mode: string;
-  onOpenMenu: () => void;
-  effect: SideMenuSceneEffect;
-  onEffect: (effect: SideMenuSceneEffect) => void;
-  rightSide: boolean;
-  onRightSide: () => void;
-  light: boolean;
-  onLight: () => void;
-}
-
-/** A stand-in for the app's home: a map-like area with a sheet of options below. */
-function HomeScreen({
-  title,
-  mode,
-  onOpenMenu,
-  effect,
-  onEffect,
-  rightSide,
-  onRightSide,
-  light,
-  onLight,
-}: HomeScreenProps) {
-  const insets = useSafeAreaInsets();
-
-  return (
-    <View style={styles.screen}>
-      <StatusBar style="dark" />
-      <View style={styles.map}>
-        {Array.from({ length: 9 }, (_, index) => (
-          <View key={`h${index}`} style={[styles.street, { top: `${index * 12}%` }]} />
-        ))}
-        {Array.from({ length: 6 }, (_, index) => (
-          <View key={`v${index}`} style={[styles.avenue, { left: `${index * 20}%` }]} />
-        ))}
-        <View style={[styles.park, { top: '18%', left: '58%' }]} />
-        <View style={[styles.park, { top: '52%', left: '8%', width: 90 }]} />
-        <View style={styles.pin}>
-          <Ionicons name="location" size={34} color="#3D5AFE" />
-        </View>
-
-        <View style={[styles.topBar, { paddingTop: insets.top + 8 }]}>
-          <Pressable
-            onPress={onOpenMenu}
-            style={styles.menuButton}
-            accessibilityRole="button"
-            accessibilityLabel="Abrir menú">
-            <Ionicons name="menu" size={24} color="#111519" />
-          </Pressable>
-          <View style={styles.titlePill}>
-            <Text style={styles.title}>{title}</Text>
-          </View>
-        </View>
+/** Logo, search and a two-tab switch, folded down to the logo when the rail is compact. */
+function RailHeader({ theme, helpers }: { theme: SideMenuTheme; helpers: SideMenuHelpers }) {
+  const [tab, setTab] = useState<'store' | 'team'>('store');
+  if (helpers.compact) {
+    return (
+      <View style={styles.railHeaderCompact}>
+        <Ionicons name="layers-outline" size={26} color={theme.text} />
+        <Ionicons name="search-outline" size={22} color={theme.textSecondary} />
       </View>
-
-      <View style={[styles.sheet, { paddingBottom: insets.bottom + 16 }]}>
-        <Text style={styles.sheetTitle}>¿A dónde vas?</Text>
-        <Text style={styles.sheetText}>
-          Modo actual: {mode}. Abre el menú o desliza para cerrarlo.
+    );
+  }
+  return (
+    <View style={styles.railHeader}>
+      <View style={styles.brandRow}>
+        <Ionicons name="layers-outline" size={26} color={theme.text} />
+        <Text style={[styles.brand, { color: theme.text }]}>
+          Nova <Text style={[styles.brandVersion, { color: theme.textMuted }]}>v2.4</Text>
         </Text>
-
-        <Text style={styles.label}>Efecto de la pantalla</Text>
-        <View style={styles.chips}>
-          {EFFECTS.map((item) => (
-            <Chip
-              key={item.value}
-              label={item.label}
-              active={effect === item.value}
-              onPress={() => onEffect(item.value)}
-            />
-          ))}
-        </View>
-
-        <Text style={styles.label}>Opciones</Text>
-        <View style={styles.chips}>
-          <Chip label="Desde la derecha" active={rightSide} onPress={onRightSide} />
-          <Chip label="Tema claro" active={light} onPress={onLight} />
-        </View>
+        <Ionicons name="search-outline" size={20} color={theme.textSecondary} />
+      </View>
+      <View style={[styles.segment, { borderColor: theme.divider }]}>
+        {(['store', 'team'] as const).map((key) => {
+          const active = tab === key;
+          return (
+            <Pressable
+              key={key}
+              onPress={() => setTab(key)}
+              style={[styles.segmentItem, active && { backgroundColor: theme.accent }]}
+              accessibilityRole="button"
+              accessibilityState={{ selected: active }}>
+              <Text
+                style={[
+                  styles.segmentText,
+                  { color: active ? theme.onAccent : theme.textSecondary },
+                ]}>
+                {key === 'store' ? 'TIENDA' : 'EQUIPO'}
+              </Text>
+            </Pressable>
+          );
+        })}
       </View>
     </View>
   );
 }
 
-function Chip({ label, active, onPress }: { label: string; active: boolean; onPress: () => void }) {
+function Initials({ theme }: { theme: SideMenuTheme }) {
+  return <Text style={[styles.initials, { color: theme.text }]}>AR</Text>;
+}
+
+interface DashboardProps {
+  title: string;
+  onMenu: () => void;
+  menuOpen: boolean;
+  style: StyleOption;
+  onStyle: (style: StyleOption) => void;
+  themeName: ThemeName;
+  onTheme: (name: ThemeName) => void;
+  rightSide: boolean;
+  onRightSide: (value: boolean) => void;
+}
+
+const KPIS = [
+  {
+    label: 'Ventas',
+    value: 'S/ 12 480',
+    change: '+12%',
+    icon: 'trending-up-outline',
+    tint: '#E8F0FF',
+  },
+  { label: 'Pedidos', value: '342', change: '+8%', icon: 'receipt-outline', tint: '#FFF4DC' },
+  { label: 'Clientes', value: '1 208', change: '+5%', icon: 'people-outline', tint: '#E6F8EC' },
+  {
+    label: 'Ticket medio',
+    value: 'S/ 36,5',
+    change: '+3%',
+    icon: 'pricetag-outline',
+    tint: '#F3E8FF',
+  },
+] as const;
+
+const WEEK = [42, 64, 51, 78, 69, 92, 58];
+const DAYS = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
+
+const ORDERS = [
+  { id: '#4821', customer: 'Lucía Paredes', total: 'S/ 89,90', status: 'Pagado', color: '#1F9D55' },
+  { id: '#4820', customer: 'Diego Salas', total: 'S/ 154,00', status: 'Enviado', color: '#3D5AFE' },
+  {
+    id: '#4819',
+    customer: 'Valeria Núñez',
+    total: 'S/ 42,50',
+    status: 'Pendiente',
+    color: '#E08600',
+  },
+];
+
+function Dashboard({
+  title,
+  onMenu,
+  menuOpen,
+  style,
+  onStyle,
+  themeName,
+  onTheme,
+  rightSide,
+  onRightSide,
+}: DashboardProps) {
+  const insets = useSafeAreaInsets();
+  const isRail = style.variant === 'rail';
+  const peak = Math.max(...WEEK);
+
   return (
-    <Pressable
-      onPress={onPress}
-      style={[styles.chip, active && styles.chipActive]}
-      accessibilityRole="button"
-      accessibilityState={{ selected: active }}>
-      <Text style={[styles.chipText, active && styles.chipTextActive]}>{label}</Text>
-    </Pressable>
+    <View style={styles.screen}>
+      <StatusBar style="dark" />
+      <View style={[styles.topBar, { paddingTop: insets.top + 8 }]}>
+        {isRail ? null : (
+          <Pressable
+            onPress={onMenu}
+            style={styles.iconButton}
+            accessibilityRole="button"
+            accessibilityLabel="Abrir menú">
+            <Ionicons name="menu" size={22} color="#15171A" />
+          </Pressable>
+        )}
+        <View style={styles.flex}>
+          <Text style={styles.kicker}>Tienda Nova</Text>
+          <Text style={styles.title}>{title}</Text>
+        </View>
+        <View style={styles.iconButton}>
+          <Ionicons name="notifications-outline" size={20} color="#15171A" />
+          <View style={styles.dot} />
+        </View>
+      </View>
+      <ScrollView
+        contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + 24 }]}
+        showsVerticalScrollIndicator={false}>
+        <Text style={styles.greeting}>Hola, Andrea 👋</Text>
+        <Text style={styles.muted}>Así va tu tienda esta semana.</Text>
+
+        <View style={styles.kpis}>
+          {KPIS.map((kpi) => (
+            <View key={kpi.label} style={[styles.card, styles.kpi]}>
+              <View style={[styles.kpiIcon, { backgroundColor: kpi.tint }]}>
+                <Ionicons name={kpi.icon} size={18} color="#15171A" />
+              </View>
+              <Text style={styles.kpiLabel}>{kpi.label}</Text>
+              <Text style={styles.kpiValue} numberOfLines={1}>
+                {kpi.value}
+              </Text>
+              <Text style={styles.kpiChange}>{kpi.change} vs. semana pasada</Text>
+            </View>
+          ))}
+        </View>
+
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>Ventas de la semana</Text>
+          <View style={styles.chart}>
+            {WEEK.map((value, index) => (
+              <View key={index} style={styles.barColumn}>
+                <View
+                  style={[
+                    styles.bar,
+                    { height: `${(value / peak) * 100}%` },
+                    index === 5 && styles.barPeak,
+                  ]}
+                />
+                <Text style={styles.barLabel}>{DAYS[index]}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
+
+        <View style={[styles.card, styles.styleCard]}>
+          <Text style={styles.cardTitle}>Estilo del menú</Text>
+          <Text style={styles.muted}>
+            {isRail
+              ? 'Usa la flecha del borde para abrir o compactar la barra.'
+              : `Toca ☰ para ${menuOpen ? 'cerrar' : 'abrir'} el menú.`}
+          </Text>
+          {STYLES.map((option) => {
+            const active = option.variant === style.variant;
+            return (
+              <Pressable
+                key={option.variant}
+                onPress={() => onStyle(option)}
+                style={[styles.styleRow, active && styles.styleRowActive]}
+                accessibilityRole="switch"
+                accessibilityState={{ checked: active }}
+                accessibilityLabel={option.name}>
+                <View style={[styles.styleIcon, active && styles.styleIconActive]}>
+                  <Ionicons name={option.icon} size={18} color={active ? '#FFFFFF' : '#15171A'} />
+                </View>
+                <View style={styles.flex}>
+                  <Text style={styles.styleName}>{option.name}</Text>
+                  <Text style={styles.styleDescription}>{option.description}</Text>
+                </View>
+                <Switch
+                  value={active}
+                  onValueChange={(on) => {
+                    if (on) onStyle(option);
+                  }}
+                  trackColor={{ true: '#3D5AFE' }}
+                />
+              </Pressable>
+            );
+          })}
+
+          <Text style={[styles.cardTitle, styles.subTitle]}>Tema</Text>
+          <View style={styles.chips}>
+            {THEMES.map((item) => {
+              const active = item.name === themeName;
+              return (
+                <Pressable
+                  key={item.name}
+                  onPress={() => onTheme(item.name)}
+                  style={[styles.chip, active && styles.chipActive]}
+                  accessibilityRole="button"
+                  accessibilityState={{ selected: active }}>
+                  <View
+                    style={[styles.swatch, { backgroundColor: themes[item.name].background }]}
+                  />
+                  <Text style={[styles.chipText, active && styles.chipTextActive]}>
+                    {item.label}
+                  </Text>
+                </Pressable>
+              );
+            })}
+          </View>
+
+          <Pressable
+            onPress={() => onRightSide(!rightSide)}
+            style={styles.styleRow}
+            accessibilityRole="switch"
+            accessibilityState={{ checked: rightSide }}>
+            <View style={styles.flex}>
+              <Text style={styles.styleName}>Abrir desde la derecha</Text>
+            </View>
+            <Switch
+              value={rightSide}
+              onValueChange={onRightSide}
+              trackColor={{ true: '#3D5AFE' }}
+            />
+          </Pressable>
+        </View>
+
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>Pedidos recientes</Text>
+          {ORDERS.map((order) => (
+            <View key={order.id} style={styles.order}>
+              <View style={styles.flex}>
+                <Text style={styles.orderCustomer}>{order.customer}</Text>
+                <Text style={styles.muted}>
+                  {order.id} · {order.total}
+                </Text>
+              </View>
+              <View style={[styles.status, { backgroundColor: `${order.color}1A` }]}>
+                <Text style={[styles.statusText, { color: order.color }]}>{order.status}</Text>
+              </View>
+            </View>
+          ))}
+        </View>
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  flex: {
+    flex: 1,
+  },
   screen: {
     flex: 1,
-    backgroundColor: '#F2F4F6',
+    backgroundColor: '#F4F6FA',
   },
-  map: {
-    flex: 1,
-    backgroundColor: '#E9ECE6',
-    overflow: 'hidden',
-  },
-  street: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    height: 6,
-    backgroundColor: '#FFFFFF',
-  },
-  avenue: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    width: 10,
-    backgroundColor: '#FFFFFF',
-  },
-  park: {
-    position: 'absolute',
-    width: 120,
-    height: 80,
-    borderRadius: 12,
-    backgroundColor: '#CFE5C4',
-  },
-  pin: {
-    position: 'absolute',
-    top: '42%',
-    left: '46%',
+  content: {
+    paddingHorizontal: 16,
+    gap: 14,
   },
   topBar: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
     paddingHorizontal: 16,
+    paddingBottom: 8,
+    backgroundColor: '#F4F6FA',
   },
-  menuButton: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+  iconButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     backgroundColor: '#FFFFFF',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  titlePill: {
-    height: 48,
-    borderRadius: 24,
-    paddingHorizontal: 18,
-    backgroundColor: '#FFFFFF',
-    justifyContent: 'center',
+  dot: {
+    position: 'absolute',
+    top: 11,
+    right: 12,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#E5484D',
+  },
+  kicker: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#6B7280',
   },
   title: {
-    fontSize: 17,
+    fontSize: 20,
     fontWeight: '700',
-    color: '#111519',
+    color: '#15171A',
   },
-  sheet: {
-    marginTop: -24,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    backgroundColor: '#FFFFFF',
-    paddingHorizontal: 20,
-    paddingTop: 20,
+  greeting: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#15171A',
+    marginTop: 4,
+  },
+  muted: {
+    fontSize: 13,
+    color: '#6B7280',
+  },
+  kpis: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 10,
   },
-  sheetTitle: {
-    fontSize: 22,
-    fontWeight: '700',
-    color: '#111519',
+  card: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 18,
+    padding: 16,
+    gap: 6,
   },
-  sheetText: {
-    fontSize: 14,
-    color: '#5B6470',
+  kpi: {
+    flexBasis: '47%',
+    flexGrow: 1,
+    gap: 4,
   },
-  label: {
-    marginTop: 6,
+  kpiIcon: {
+    width: 34,
+    height: 34,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 6,
+  },
+  kpiLabel: {
     fontSize: 13,
+    color: '#6B7280',
+  },
+  kpiValue: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#15171A',
+  },
+  kpiChange: {
+    fontSize: 11.5,
     fontWeight: '600',
-    color: '#8A939E',
+    color: '#1F9D55',
+  },
+  cardTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#15171A',
+  },
+  subTitle: {
+    marginTop: 10,
+  },
+  chart: {
+    height: 140,
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    gap: 10,
+    marginTop: 8,
+  },
+  barColumn: {
+    flex: 1,
+    height: '100%',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    gap: 6,
+  },
+  bar: {
+    width: '100%',
+    maxHeight: 112,
+    borderRadius: 8,
+    backgroundColor: '#C9D6FF',
+  },
+  barPeak: {
+    backgroundColor: '#3D5AFE',
+  },
+  barLabel: {
+    fontSize: 11,
+    color: '#6B7280',
+  },
+  styleCard: {
+    gap: 8,
+  },
+  styleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    paddingVertical: 8,
+    paddingHorizontal: 8,
+    borderRadius: 14,
+  },
+  styleRowActive: {
+    backgroundColor: '#EEF2FF',
+  },
+  styleIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: 12,
+    backgroundColor: '#F1F3F6',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  styleIconActive: {
+    backgroundColor: '#3D5AFE',
+  },
+  styleName: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#15171A',
+  },
+  styleDescription: {
+    fontSize: 12,
+    color: '#6B7280',
   },
   chips: {
     flexDirection: 'row',
@@ -328,21 +651,99 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   chip: {
-    height: 38,
-    borderRadius: 19,
-    paddingHorizontal: 16,
-    backgroundColor: '#F2F4F6',
-    justifyContent: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    height: 34,
+    borderRadius: 17,
+    paddingHorizontal: 12,
+    backgroundColor: '#F1F3F6',
   },
   chipActive: {
-    backgroundColor: '#111519',
+    backgroundColor: '#15171A',
+  },
+  swatch: {
+    width: 14,
+    height: 14,
+    borderRadius: 7,
+    borderWidth: 1,
+    borderColor: 'rgba(0, 0, 0, 0.12)',
   },
   chipText: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '600',
-    color: '#111519',
+    color: '#15171A',
   },
   chipTextActive: {
-    color: '#D4E838',
+    color: '#FFFFFF',
+  },
+  order: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: '#E5E7EB',
+  },
+  orderCustomer: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#15171A',
+  },
+  status: {
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+  },
+  statusText: {
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  initials: {
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  railHeader: {
+    gap: 14,
+    paddingTop: 4,
+    paddingBottom: 18,
+  },
+  railHeaderCompact: {
+    alignItems: 'center',
+    gap: 18,
+    paddingTop: 4,
+    paddingBottom: 18,
+  },
+  brandRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingHorizontal: 4,
+  },
+  brand: {
+    flex: 1,
+    fontSize: 15,
+    fontWeight: '600',
+  },
+  brandVersion: {
+    fontSize: 10,
+    fontWeight: '500',
+  },
+  segment: {
+    flexDirection: 'row',
+    borderWidth: 1,
+    borderRadius: 12,
+    padding: 3,
+  },
+  segmentItem: {
+    flex: 1,
+    height: 36,
+    borderRadius: 9,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  segmentText: {
+    fontSize: 11,
+    fontWeight: '700',
+    letterSpacing: 1.2,
   },
 });
