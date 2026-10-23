@@ -25,7 +25,7 @@ Modos compactos: <img src="https://raw.githubusercontent.com/VMichael1999/expo-r
 - **Ocho estilos** con una sola API: cambias `variant` y las mismas secciones, perfil y tema se presentan de otra forma.
 - Corre con **Reanimated**, en el hilo de la interfaz, y sigue tu dedo: **desliza** el panel (o la pantalla) de vuelta para cerrarlo.
 - **Las acciones se ejecutan cuando el menú ya se cerró**, así navegar nunca choca con la animación.
-- **Todo lo de dentro es opcional y reemplazable**: perfil, secciones con título, **contadores** del color que quieras, la opción en la que estás (`selectedKey`), un **botón destacado**, la fila de **cerrar sesión**, el texto del pie, o tu propio `header`, `footer` o el `content` completo.
+- **Contenido 100% personalizable**: eliges qué bloques aparecen y en qué orden (`order`), pones tu propio contenido entre secciones, das a las opciones subtítulos, switches o un aspecto totalmente propio, o reemplazas el panel entero. Incluye piezas listas: perfil, secciones con título, **contadores** del color que quieras, la opción en la que estás (`selectedKey`), un **botón destacado**, la fila de **cerrar sesión** y el texto del pie.
 - **Paletas listas** (`themes`) y **temas** para todos los colores y fuentes.
 - Se abre por la **izquierda o la derecha**; el botón atrás de Android lo cierra; la **barra de estado** sigue el color del panel.
 - Escrito en TypeScript y sin código nativo propio: funciona en Expo Go.
@@ -172,15 +172,54 @@ Cada sección tiene una `key`, un `title` opcional y sus `items`. El `icon` de u
 
 `action` es un botón a todo el ancho bajo las secciones (`accent` u `outline`). `logout` agrega una fila en el color de peligro (`label` por defecto es `'Log out'`). `footerText` agrega un texto pequeño y centrado, como la versión de la app.
 
-### Tu propio contenido
+### Tu propio contenido: tú decides qué va y dónde
 
-Todas las piezas son opcionales: deja fuera lo que no necesites. Y hay tres espacios para tu propio contenido:
+Todo lo que hay dentro del panel lo eliges tú.
+
+**1. Elige los bloques y su orden.** `order` lista los bloques de arriba hacia abajo; lo que dejes fuera no se muestra:
+
+```tsx
+// Por defecto: ['header', 'sections', 'action', 'logout', 'profile', 'footerText', 'footer']
+<SideMenu order={['footer', 'sections', 'action', 'header']} ... />
+```
+
+| Bloque | Qué dibuja |
+| --- | --- |
+| `header` | Tu `header`, o el perfil cuando va arriba |
+| `sections` | Las secciones y sus opciones (la parte que se desplaza) |
+| `action` | El botón destacado |
+| `logout` | La fila de cerrar sesión |
+| `profile` | La tarjeta de perfil, cuando `profile.position` es `'bottom'` |
+| `footerText` | El texto pequeño del pie |
+| `footer` | Tu `footer` |
+
+**2. Pon lo que quieras entre las secciones.** Una sección puede llevar tu propio `content`, debajo de sus opciones o sola:
+
+```tsx
+sections={[
+  { key: 'main', title: 'Principal', items: [...] },
+  { key: 'promo', content: <BannerPromo /> },          // un bloque libre entre secciones
+  { key: 'mas', title: 'Más', items: [...], content: <Text>¿Necesitas ayuda? Escríbenos</Text> },
+]}
+```
+
+**3. Dale forma a cada opción.** Agrega un `subtitle`, pon un switch o cualquier elemento al final con `trailing`, omite `onPress` en filas que solo llevan un control, o dibuja la fila entera con `render`:
+
+```tsx
+{ key: 'plan', label: 'Plan', subtitle: 'Pro hasta mayo', icon: 'star-outline', onPress: abrirPlan }
+{ key: 'oscuro', label: 'Modo oscuro', icon: 'moon-outline', trailing: <Switch value={oscuro} onValueChange={setOscuro} /> }
+{ key: 'tienda', label: 'Mi tienda', onPress: abrirTienda, render: ({ selected, color }) => <FilaTienda activa={selected} tono={color} /> }
+```
+
+Una fila dibujada con `render` conserva el toque y el fondo de seleccionada.
+
+**4. Tu propia cabecera, pie o el panel entero.**
 
 - `header`: reemplaza la cabecera de perfil.
 - `footer`: se agrega al final del panel.
-- `content`: reemplaza todo lo que hay dentro del panel.
+- `content`: reemplaza todo lo que hay dentro del panel, para un diseño totalmente propio.
 
-Cada uno acepta un elemento, o una función que recibe `close`, `closeThen` y `compact` (si el panel muestra solo iconos):
+Cada uno (y el `content` de una sección) acepta un elemento, o una función que recibe `close`, `closeThen` y `compact` (si el panel muestra solo iconos):
 
 ```tsx
 <SideMenu
@@ -190,6 +229,12 @@ Cada uno acepta un elemento, o una función que recibe `close`, `closeThen` y `c
   )}
   ...
 />
+```
+
+**5. Dale estilo al panel.** `panelStyle` define el padding, el fondo o los bordes del contenedor interno del panel:
+
+```tsx
+<SideMenu panelStyle={{ paddingHorizontal: 24, borderRightWidth: 1, borderColor: '#E5E7EB' }} ... />
 ```
 
 ### Temas
@@ -244,6 +289,8 @@ Un `width` hasta `1` es una fracción de la pantalla (por defecto `0.78`); los v
 | `footerText` | `string` | | Texto pequeño al final. |
 | `footer` | `SideMenuSlot` | | Tu propio contenido al final. |
 | `content` | `SideMenuSlot` | | Reemplaza todo lo de dentro del panel. |
+| `order` | `SideMenuBlock[]` | todos los bloques | Qué bloques se muestran, de arriba hacia abajo. |
+| `panelStyle` | `StyleProp<ViewStyle>` | | Padding, fondo y bordes del panel. |
 | `backdrop` | `ReactNode` | | Se dibuja detrás de la pantalla en `reveal`, `cards`, `flip` y `push`. |
 | `side` | `'left' \| 'right'` | `'left'` | Borde desde el que se abre. |
 | `width` | `number` | `0.78` | Fracción de la pantalla, o puntos. |

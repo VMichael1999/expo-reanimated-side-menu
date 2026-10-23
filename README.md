@@ -25,7 +25,7 @@ Compact modes: <img src="https://raw.githubusercontent.com/VMichael1999/expo-rea
 - **Eight styles** with one API: switch `variant` and the same sections, profile and theme are presented differently.
 - Runs on **Reanimated**, on the UI thread, and follows your finger: **swipe** the panel (or the screen) back to close.
 - **Actions run after the menu closes**, so navigating never fights the closing animation.
-- **Everything inside is optional and replaceable**: profile, titled sections, **badges** in any color, the item you are on (`selectedKey`), a highlighted **action** button, a **logout** row, footer text, or your own `header`, `footer` or whole `content`.
+- **100% customizable content**: choose which blocks appear and in what order (`order`), put your own content between sections, give items subtitles, switches or a fully custom look, or replace the whole panel. Ready-made pieces included: profile, titled sections, **badges** in any color, the item you are on (`selectedKey`), a highlighted **action** button, a **logout** row and footer text.
 - **Ready-made palettes** (`themes`) and full **theming** of every color and font.
 - Opens from the **left or right**; the Android back button closes it; the **status bar** follows the panel color.
 - Written in TypeScript, no native code of its own: works in Expo Go.
@@ -171,15 +171,54 @@ Each section has a `key`, an optional `title` and its `items`. An item's `icon` 
 
 `action` is a full-width button under the sections (`accent` or `outline`). `logout` adds a row in the danger color (`label` defaults to `'Log out'`). `footerText` adds a small centered text, such as the app version.
 
-### Your own content
+### Your own content: you decide what goes in and where
 
-Every piece is optional: leave out whatever you don't need. And three slots take your own content:
+Everything inside the panel is yours to choose.
+
+**1. Pick the blocks and their order.** `order` lists the blocks from top to bottom; whatever you leave out is hidden:
+
+```tsx
+// Default: ['header', 'sections', 'action', 'logout', 'profile', 'footerText', 'footer']
+<SideMenu order={['footer', 'sections', 'action', 'header']} ... />
+```
+
+| Block | What it draws |
+| --- | --- |
+| `header` | Your `header`, or the profile when it sits at the top |
+| `sections` | The sections and their items (the part that scrolls) |
+| `action` | The highlighted button |
+| `logout` | The logout row |
+| `profile` | The profile card, when `profile.position` is `'bottom'` |
+| `footerText` | The small footer text |
+| `footer` | Your `footer` |
+
+**2. Put anything between the sections.** A section can hold your own `content`, under its items or on its own:
+
+```tsx
+sections={[
+  { key: 'main', title: 'Main', items: [...] },
+  { key: 'promo', content: <PromoBanner /> },          // a free block between sections
+  { key: 'more', title: 'More', items: [...], content: <Text>Need help? Write to us</Text> },
+]}
+```
+
+**3. Shape each item.** Add a `subtitle`, put a switch or any element at the end with `trailing`, leave out `onPress` for rows that only hold a control, or draw the whole row with `render`:
+
+```tsx
+{ key: 'plan', label: 'Plan', subtitle: 'Pro until May', icon: 'star-outline', onPress: openPlan }
+{ key: 'dark', label: 'Dark mode', icon: 'moon-outline', trailing: <Switch value={dark} onValueChange={setDark} /> }
+{ key: 'store', label: 'My store', onPress: openStore, render: ({ selected, color }) => <StoreRow active={selected} tint={color} /> }
+```
+
+A row drawn with `render` keeps its press handling and its selected background.
+
+**4. Your own header, footer, or the whole panel.**
 
 - `header`: replaces the profile header.
-- `footer`: added at the very bottom of the panel.
-- `content`: replaces everything inside the panel.
+- `footer`: added at the bottom of the panel.
+- `content`: replaces everything inside the panel, for a fully custom layout.
 
-Each one takes an element, or a function that receives `close`, `closeThen` and `compact` (whether the panel shows icons only):
+Each one (and a section's `content`) takes an element, or a function that receives `close`, `closeThen` and `compact` (whether the panel shows icons only):
 
 ```tsx
 <SideMenu
@@ -189,6 +228,12 @@ Each one takes an element, or a function that receives `close`, `closeThen` and 
   )}
   ...
 />
+```
+
+**5. Style the panel.** `panelStyle` sets the padding, background or borders of the panel's inner container:
+
+```tsx
+<SideMenu panelStyle={{ paddingHorizontal: 24, borderRightWidth: 1, borderColor: '#E5E7EB' }} ... />
 ```
 
 ### Theming
@@ -243,6 +288,8 @@ Without `fonts`, the system font is used at the right weights.
 | `footerText` | `string` | | Small text at the bottom. |
 | `footer` | `SideMenuSlot` | | Your own content at the very bottom. |
 | `content` | `SideMenuSlot` | | Replaces everything inside the panel. |
+| `order` | `SideMenuBlock[]` | all blocks | Which blocks show, top to bottom. |
+| `panelStyle` | `StyleProp<ViewStyle>` | | Padding, background, borders of the panel. |
 | `backdrop` | `ReactNode` | | Drawn behind the screen in `reveal`, `cards`, `flip` and `push`. |
 | `side` | `'left' \| 'right'` | `'left'` | Edge it opens from. |
 | `width` | `number` | `0.78` | Fraction of the screen, or points. |
