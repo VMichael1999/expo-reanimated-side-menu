@@ -1,5 +1,5 @@
 export { SideMenu } from './SideMenu';
-export { defaultTheme } from './theme';
+export { defaultTheme, themes } from './theme';
 export type {
   SideMenuAction,
   SideMenuFonts,
@@ -9,10 +9,12 @@ export type {
   SideMenuLogout,
   SideMenuProfile,
   SideMenuProps,
+  SideMenuRail,
   SideMenuScene,
   SideMenuSceneEffect,
   SideMenuSection,
   SideMenuSlot,
   SideMenuTheme,
   SideMenuThemeOverrides,
+  SideMenuVariant,
 } from './types';

@@ -1,7 +1,7 @@
 {
   "name": "expo-reanimated-side-menu",
   "version": "0.1.0",
-  "description": "A polished side menu (drawer) for Expo and React Native: slides in with Reanimated, swipe to close, sections, profile header, highlighted action and theming.",
+  "description": "A side menu for Expo and React Native with eight styles: 3D overlay, reveal, cards, flip, push, popup, floating card and docked rail. Reanimated, swipe to close, theming.",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "react-native": "src/index.ts",
@@ -32,7 +32,10 @@
     "drawer",
     "navigation-drawer",
     "menu",
-    "swipe"
+    "swipe",
+    "sidebar",
+    "rail",
+    "floating"
   ],
   "repository": "https://github.com/VMichael1999/expo-reanimated-side-menu",
   "bugs": {
@@ -44,7 +47,7 @@
   "peerDependencies": {
     "@expo/vector-icons": ">=14",
     "react": "*",
-    "react-native": "*",
+    "react-native": ">=0.74",
     "react-native-reanimated": ">=3.6",
     "react-native-safe-area-context": ">=4"
   },
