@@ -30,16 +30,16 @@ Modos compactos: <img src="https://raw.githubusercontent.com/VMichael1999/expo-r
 
 ## Estilos
 
-| `variant` | Qué hace | Inspirado en |
-| --- | --- | --- |
-| `overlay` (por defecto) | El panel entra encima de tu pantalla, que se corre, se achica y gira en 3D detrás (`scene`). | — |
-| `reveal` | El panel espera detrás de tu pantalla, que se aparta el 75% y se achica al 85%; el panel crece a su sitio. | [flutter_advanced_drawer](https://github.com/alex-melnyk/flutter_advanced_drawer) |
-| `cards` | Como `reveal`, pero la pantalla se inclina 12° como una carta, con dos cartas fantasma detrás. | [awesome_drawer_bar](https://github.com/AppCheap/awesome_drawer_bar) (`scaleRight` con sombras) |
-| `flip` | La pantalla gira 45° en 3D sobre su borde exterior. | [awesome_drawer_bar](https://github.com/AppCheap/awesome_drawer_bar) (`rotate3dOut`) |
-| `push` | El panel entra y empuja tu pantalla, oscureciéndola. | [awesome_drawer_bar](https://github.com/AppCheap/awesome_drawer_bar) (`stack`) |
-| `popup` | El menú ocupa toda la pantalla, aparece con fundido y creciendo, con un botón para cerrar. | [awesome_drawer_bar](https://github.com/AppCheap/awesome_drawer_bar) (`popUp`) |
-| `floating` | Una tarjeta redondeada flotando sobre la app, con un botón para plegarla a solo iconos. | [sidebarx](https://github.com/Frezyx/sidebarx) |
-| `rail` | Siempre en pantalla junto a tu contenido; `visible` la cambia entre abierta y compacta. Un botón y un tirador en su borde la abren o pliegan. | [flutter_side_menu](https://github.com/resfandiari/flutter_side_menu) |
+| `variant` | Qué hace |
+| --- | --- |
+| `overlay` (por defecto) | El panel entra encima de tu pantalla, que se corre, se achica y gira en 3D detrás (`scene`). |
+| `reveal` | El panel espera detrás de tu pantalla, que se aparta el 75% y se achica al 85%; el panel crece a su sitio. |
+| `cards` | Como `reveal`, pero la pantalla se inclina 12° como una carta, con dos cartas fantasma detrás. |
+| `flip` | La pantalla gira 45° en 3D sobre su borde exterior. |
+| `push` | El panel entra y empuja tu pantalla, oscureciéndola. |
+| `popup` | El menú ocupa toda la pantalla, aparece con fundido y creciendo, con un botón para cerrar. |
+| `floating` | Una tarjeta redondeada flotando sobre la app, con un botón para plegarla a solo iconos. |
+| `rail` | Siempre en pantalla junto a tu contenido; `visible` la cambia entre abierta y compacta. Un botón y un tirador en su borde la abren o pliegan. |
 
 ## Requisitos
 

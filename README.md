@@ -30,16 +30,16 @@ Compact modes: <img src="https://raw.githubusercontent.com/VMichael1999/expo-rea
 
 ## Styles
 
-| `variant` | What it does | Inspired by |
-| --- | --- | --- |
-| `overlay` (default) | The panel slides over your screen, which shifts, shrinks and turns in 3D behind it (`scene`). | — |
-| `reveal` | The panel waits behind your screen, which slides 75% away and shrinks to 85%; the panel grows into place. | [flutter_advanced_drawer](https://github.com/alex-melnyk/flutter_advanced_drawer) |
-| `cards` | Like `reveal`, but the screen tilts 12° like a card, with two ghost cards behind it. | [awesome_drawer_bar](https://github.com/AppCheap/awesome_drawer_bar) (`scaleRight` with shadows) |
-| `flip` | The screen swings 45° away in 3D on its outer edge. | [awesome_drawer_bar](https://github.com/AppCheap/awesome_drawer_bar) (`rotate3dOut`) |
-| `push` | The panel slides in and pushes your screen aside, dimming it. | [awesome_drawer_bar](https://github.com/AppCheap/awesome_drawer_bar) (`stack`) |
-| `popup` | The menu fills the screen, fading and growing in, with a close button. | [awesome_drawer_bar](https://github.com/AppCheap/awesome_drawer_bar) (`popUp`) |
-| `floating` | A rounded card floating over the app, with a button to fold it down to icons. | [sidebarx](https://github.com/Frezyx/sidebarx) |
-| `rail` | Always on screen next to your content; `visible` switches it between open and compact. A button and a handle on its edge open or fold it. | [flutter_side_menu](https://github.com/resfandiari/flutter_side_menu) |
+| `variant` | What it does |
+| --- | --- |
+| `overlay` (default) | The panel slides over your screen, which shifts, shrinks and turns in 3D behind it (`scene`). |
+| `reveal` | The panel waits behind your screen, which slides 75% away and shrinks to 85%; the panel grows into place. |
+| `cards` | Like `reveal`, but the screen tilts 12° like a card, with two ghost cards behind it. |
+| `flip` | The screen swings 45° away in 3D on its outer edge. |
+| `push` | The panel slides in and pushes your screen aside, dimming it. |
+| `popup` | The menu fills the screen, fading and growing in, with a close button. |
+| `floating` | A rounded card floating over the app, with a button to fold it down to icons. |
+| `rail` | Always on screen next to your content; `visible` switches it between open and compact. A button and a handle on its edge open or fold it. |
 
 ## Requirements
 
