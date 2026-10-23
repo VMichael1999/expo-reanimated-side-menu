@@ -33,16 +33,6 @@ import type {
  */
 export type PanelLook = 'default' | 'floating' | 'rail';
 
-const DEFAULT_ORDER: SideMenuBlock[] = [
-  'header',
-  'sections',
-  'action',
-  'logout',
-  'profile',
-  'footerText',
-  'footer',
-];
-
 export interface MenuPanelProps {
   theme: SideMenuTheme;
   look: PanelLook;
@@ -84,7 +74,7 @@ export function MenuPanel({
   footerText,
   footer,
   content,
-  order = DEFAULT_ORDER,
+  order,
   accessory,
   style,
 }: MenuPanelProps) {
@@ -121,15 +111,7 @@ export function MenuPanel({
           : topProfile
             ? renderTopProfile(topProfile)
             : null;
-      if (node === null || node === undefined) return null;
-      return (
-        <>
-          {node}
-          {look !== 'rail' ? (
-            <View style={[styles.divider, { backgroundColor: theme.divider }]} />
-          ) : null}
-        </>
-      );
+      return node;
     },
     sections: () => (
       <ScrollView
@@ -142,8 +124,14 @@ export function MenuPanel({
         showsVerticalScrollIndicator={false}>
         {sections.map((section, index) => (
           <View key={section.key} style={styles.section}>
-            {look === 'rail' && index > 0 ? (
-              <View style={[styles.railDivider, { backgroundColor: theme.divider }]} />
+            {(section.divider ?? (look === 'rail' && index > 0)) ? (
+              <View
+                testID="side-menu-divider"
+                style={[
+                  look === 'rail' ? styles.railDivider : styles.divider,
+                  { backgroundColor: theme.divider },
+                ]}
+              />
             ) : null}
             {section.title && !compact ? (
               <Text
@@ -164,30 +152,48 @@ export function MenuPanel({
     ),
     action: () => (action ? renderAction(action) : null),
     logout: () =>
-      logout ? (
-        <>
-          <View style={[styles.divider, { backgroundColor: theme.divider }]} />
-          {renderRow({
+      logout
+        ? renderRow({
             key: 'logout',
             label: logout.label ?? 'Log out',
             icon: logout.icon ?? 'log-out-outline',
             color: theme.danger,
             onPress: logout.onPress,
-          })}
-        </>
-      ) : null,
+          })
+        : null,
     profile: () => (bottomProfile ? renderBottomProfile(bottomProfile) : null),
     footerText: () =>
       footerText && !compact ? (
         <Text style={[styles.footerText, regular, { color: theme.textMuted }]}>{footerText}</Text>
       ) : null,
     footer: () => (footer !== undefined ? renderSlot(footer) : null),
+    divider: () => (
+      <View
+        testID="side-menu-divider"
+        style={[styles.divider, { backgroundColor: theme.divider }]}
+      />
+    ),
   };
+
+  // Without an `order` of your own, the panel keeps its usual look: a line under the header (not in
+  // the rail) and another above the logout row, each only when that block is there.
+  const hasHeader = header !== undefined || topProfile !== undefined;
+  const blockOrder: SideMenuBlock[] = order ?? [
+    'header',
+    ...(hasHeader && look !== 'rail' ? (['divider'] as const) : []),
+    'sections',
+    'action',
+    ...(logout ? (['divider'] as const) : []),
+    'logout',
+    'profile',
+    'footerText',
+    'footer',
+  ];
 
   return (
     <View style={[styles.panel, { paddingTop, paddingBottom, paddingHorizontal: padding }, style]}>
-      {order.map((block) => (
-        <Fragment key={block}>{blocks[block]()}</Fragment>
+      {blockOrder.map((block, index) => (
+        <Fragment key={`${block}-${index}`}>{blocks[block]()}</Fragment>
       ))}
       {accessory}
     </View>

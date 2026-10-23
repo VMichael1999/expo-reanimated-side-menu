@@ -46,15 +46,21 @@ export interface SideMenuSection {
    * with only `content` is a free block placed between the other sections.
    */
   content?: SideMenuSlot;
+  /**
+   * Draws a line above the section. Defaults to `true` between sections in the `rail` variant
+   * and `false` everywhere else.
+   */
+  divider?: boolean;
 }
 
 /**
  * The blocks of the panel, which can be shown in any order or left out with `order`:
  * `header` (your header or the top profile), `sections`, `action`, `logout`, `profile` (the
- * profile card at the bottom), `footerText` and `footer`.
+ * profile card at the bottom), `footerText`, `footer` and `divider` (a line, which can be used as
+ * many times as you like).
  */
 export type SideMenuBlock =
-  'header' | 'sections' | 'action' | 'logout' | 'profile' | 'footerText' | 'footer';
+  'header' | 'sections' | 'action' | 'logout' | 'profile' | 'footerText' | 'footer' | 'divider';
 
 export interface SideMenuProfile {
   title: string;
@@ -204,8 +210,9 @@ export interface SideMenuProps {
   /** Replaces everything inside the panel with your own content. */
   content?: SideMenuSlot;
   /**
-   * Which blocks the panel shows and in what order, top to bottom. Blocks left out are hidden.
-   * Defaults to `['header', 'sections', 'action', 'logout', 'profile', 'footerText', 'footer']`.
+   * Which blocks the panel shows and in what order, top to bottom. Blocks left out are hidden,
+   * and only the `divider`s you list are drawn. Without it, every block is shown with a line
+   * under the header and another above the logout row.
    */
   order?: SideMenuBlock[];
   /** Style of the panel's inner container: padding, background, borders. */
