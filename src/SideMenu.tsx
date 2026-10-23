@@ -30,6 +30,8 @@ export function SideMenu({
   footerText,
   footer,
   content,
+  order,
+  panelStyle,
   backdrop,
   side = 'left',
   width = 0.78,
@@ -93,7 +95,9 @@ export function SideMenu({
         footerText={footerText}
         footer={footer}
         content={content}
+        order={order}
         accessory={accessory}
+        style={panelStyle}
       />
     );
   };

@@ -1,18 +1,34 @@
 import type { ReactElement, ReactNode } from 'react';
-import type { ImageSourcePropType } from 'react-native';
+import type { ImageSourcePropType, StyleProp, ViewStyle } from 'react-native';
 import type Ionicons from '@expo/vector-icons/Ionicons';
 
 /** An Ionicons name (`'home-outline'`) or any element you want to draw as the icon. */
 export type SideMenuIcon = keyof typeof Ionicons.glyphMap | ReactElement;
 
+/** Handed to an item's `render`. */
+export interface SideMenuItemInfo extends SideMenuHelpers {
+  selected: boolean;
+  /** The color the label would be drawn in. */
+  color: string;
+}
+
 export interface SideMenuItem {
   key: string;
   label: string;
+  /** Second line under the label. */
+  subtitle?: string;
   icon?: SideMenuIcon;
   /** Color of the label and icon. Defaults to `theme.text`. */
   color?: string;
-  /** Runs once the menu has finished closing, so the next screen never fights the animation. */
-  onPress: () => void;
+  /**
+   * Runs once the menu has finished closing, so the next screen never fights the animation.
+   * Without it the row is not pressable (e.g. a row holding a switch in `trailing`).
+   */
+  onPress?: () => void;
+  /** Anything drawn at the right end of the row instead of the badge: a switch, a chevron, a tag. */
+  trailing?: ReactNode;
+  /** Draws the whole row yourself. The row keeps its press handling and selected background. */
+  render?: (info: SideMenuItemInfo) => ReactNode;
   /** Small pill on the right, e.g. a counter of unread notifications. */
   badge?: string | number;
   /** Background of the badge. Defaults to `theme.accent`. */
@@ -24,8 +40,21 @@ export interface SideMenuSection {
   key: string;
   /** Small caption above the items. Leave it out for a section without a title. */
   title?: string;
-  items: SideMenuItem[];
+  items?: SideMenuItem[];
+  /**
+   * Your own content in this section, under its items: a banner, a card, a text, buttons. A section
+   * with only `content` is a free block placed between the other sections.
+   */
+  content?: SideMenuSlot;
 }
+
+/**
+ * The blocks of the panel, which can be shown in any order or left out with `order`:
+ * `header` (your header or the top profile), `sections`, `action`, `logout`, `profile` (the
+ * profile card at the bottom), `footerText` and `footer`.
+ */
+export type SideMenuBlock =
+  'header' | 'sections' | 'action' | 'logout' | 'profile' | 'footerText' | 'footer';
 
 export interface SideMenuProfile {
   title: string;
@@ -174,6 +203,13 @@ export interface SideMenuProps {
   footer?: SideMenuSlot;
   /** Replaces everything inside the panel with your own content. */
   content?: SideMenuSlot;
+  /**
+   * Which blocks the panel shows and in what order, top to bottom. Blocks left out are hidden.
+   * Defaults to `['header', 'sections', 'action', 'logout', 'profile', 'footerText', 'footer']`.
+   */
+  order?: SideMenuBlock[];
+  /** Style of the panel's inner container: padding, background, borders. */
+  panelStyle?: StyleProp<ViewStyle>;
   /** Drawn behind the screen in the variants where the panel waits behind it, e.g. a gradient. */
   backdrop?: ReactNode;
   /** Edge the menu slides in from. Defaults to `left`. */

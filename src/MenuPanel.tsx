@@ -1,5 +1,5 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { isValidElement, useState, type ReactElement, type ReactNode } from 'react';
+import { Fragment, isValidElement, useState, type ReactElement, type ReactNode } from 'react';
 import {
   Image,
   Pressable,
@@ -16,6 +16,7 @@ import { MenuIcon } from './MenuIcon';
 import { fontStyle, isDarkColor } from './theme';
 import type {
   SideMenuAction,
+  SideMenuBlock,
   SideMenuHelpers,
   SideMenuItem,
   SideMenuLogout,
@@ -31,6 +32,16 @@ import type {
  * with a line on its edge).
  */
 export type PanelLook = 'default' | 'floating' | 'rail';
+
+const DEFAULT_ORDER: SideMenuBlock[] = [
+  'header',
+  'sections',
+  'action',
+  'logout',
+  'profile',
+  'footerText',
+  'footer',
+];
 
 export interface MenuPanelProps {
   theme: SideMenuTheme;
@@ -49,6 +60,7 @@ export interface MenuPanelProps {
   footerText?: string;
   footer?: SideMenuSlot;
   content?: SideMenuSlot;
+  order?: SideMenuBlock[];
   /** Drawn at the very bottom, after everything else (e.g. the collapse button). */
   accessory?: ReactNode;
   style?: StyleProp<ViewStyle>;
@@ -72,6 +84,7 @@ export function MenuPanel({
   footerText,
   footer,
   content,
+  order = DEFAULT_ORDER,
   accessory,
   style,
 }: MenuPanelProps) {
@@ -99,16 +112,26 @@ export function MenuPanel({
 
   const topProfile = profile && profilePosition === 'top' ? profile : undefined;
   const bottomProfile = profile && profilePosition === 'bottom' ? profile : undefined;
-  const hasHeader = header !== undefined || topProfile !== undefined;
 
-  return (
-    <View style={[styles.panel, { paddingTop, paddingBottom, paddingHorizontal: padding }, style]}>
-      {header !== undefined ? renderSlot(header) : topProfile ? renderTopProfile(topProfile) : null}
-
-      {hasHeader && look !== 'rail' ? (
-        <View style={[styles.divider, { backgroundColor: theme.divider }]} />
-      ) : null}
-
+  const blocks: Record<SideMenuBlock, () => ReactNode> = {
+    header: () => {
+      const node =
+        header !== undefined
+          ? renderSlot(header)
+          : topProfile
+            ? renderTopProfile(topProfile)
+            : null;
+      if (node === null || node === undefined) return null;
+      return (
+        <>
+          {node}
+          {look !== 'rail' ? (
+            <View style={[styles.divider, { backgroundColor: theme.divider }]} />
+          ) : null}
+        </>
+      );
+    },
+    sections: () => (
       <ScrollView
         scrollEnabled={contentHeight > listHeight + 1}
         bounces={false}
@@ -133,14 +156,15 @@ export function MenuPanel({
                 {look === 'rail' ? section.title.toUpperCase() : section.title}
               </Text>
             ) : null}
-            {section.items.map((item) => renderItem(item))}
+            {section.items?.map((item) => renderItem(item))}
+            {section.content !== undefined ? renderSlot(section.content) : null}
           </View>
         ))}
       </ScrollView>
-
-      {action ? renderAction(action) : null}
-
-      {logout ? (
+    ),
+    action: () => (action ? renderAction(action) : null),
+    logout: () =>
+      logout ? (
         <>
           <View style={[styles.divider, { backgroundColor: theme.divider }]} />
           {renderRow({
@@ -151,15 +175,20 @@ export function MenuPanel({
             onPress: logout.onPress,
           })}
         </>
-      ) : null}
-
-      {bottomProfile ? renderBottomProfile(bottomProfile) : null}
-
-      {footerText && !compact ? (
+      ) : null,
+    profile: () => (bottomProfile ? renderBottomProfile(bottomProfile) : null),
+    footerText: () =>
+      footerText && !compact ? (
         <Text style={[styles.footerText, regular, { color: theme.textMuted }]}>{footerText}</Text>
-      ) : null}
+      ) : null,
+    footer: () => (footer !== undefined ? renderSlot(footer) : null),
+  };
 
-      {footer !== undefined ? renderSlot(footer) : null}
+  return (
+    <View style={[styles.panel, { paddingTop, paddingBottom, paddingHorizontal: padding }, style]}>
+      {order.map((block) => (
+        <Fragment key={block}>{blocks[block]()}</Fragment>
+      ))}
       {accessory}
     </View>
   );
@@ -244,10 +273,12 @@ export function MenuPanel({
     const dimmed = selectedKey !== undefined && !selected && item.color === undefined;
     const color = item.color ?? (dimmed ? theme.textSecondary : theme.text);
     const labelFont = look === 'default' || selected ? bold : regular;
+    const onPress = item.onPress;
     return (
       <Pressable
         key={item.key}
-        onPress={() => helpers.closeThen(item.onPress)}
+        onPress={onPress ? () => helpers.closeThen(onPress) : undefined}
+        disabled={!onPress}
         style={({ pressed }) => [
           styles.item,
           look === 'floating' && styles.floatingItem,
@@ -258,37 +289,54 @@ export function MenuPanel({
             look === 'floating' && [styles.floatingSelected, { borderColor: theme.divider }],
           pressed && !selected && { backgroundColor: theme.itemPressed },
         ]}
-        accessibilityRole="button"
+        accessibilityRole={onPress ? 'button' : undefined}
         accessibilityState={{ selected }}
         accessibilityLabel={item.accessibilityLabel ?? item.label}>
         {selected && look === 'rail' ? (
           <View style={[styles.selectedLine, { backgroundColor: theme.accent }]} />
         ) : null}
-        {item.icon ? (
-          <View>
-            <MenuIcon icon={item.icon} size={look === 'default' ? 22 : 20} color={color} />
-            {compact && item.badge !== undefined ? (
-              <View
-                style={[styles.badgeDot, { backgroundColor: item.badgeColor ?? theme.accent }]}
-              />
-            ) : null}
-          </View>
-        ) : null}
-        {compact ? null : (
+        {item.render ? (
+          item.render({ ...helpers, selected, color })
+        ) : (
           <>
-            <Text
-              style={[
-                styles.itemLabel,
-                look !== 'default' && styles.itemLabelSmall,
-                labelFont,
-                { color },
-              ]}
-              numberOfLines={1}>
-              {item.label}
-            </Text>
-            {item.badge !== undefined ? (
-              <Badge value={item.badge} color={item.badgeColor ?? theme.accent} theme={theme} />
+            {item.icon ? (
+              <View>
+                <MenuIcon icon={item.icon} size={look === 'default' ? 22 : 20} color={color} />
+                {compact && item.badge !== undefined ? (
+                  <View
+                    style={[styles.badgeDot, { backgroundColor: item.badgeColor ?? theme.accent }]}
+                  />
+                ) : null}
+              </View>
             ) : null}
+            {compact ? null : (
+              <>
+                <View style={styles.itemText}>
+                  <Text
+                    style={[
+                      styles.itemLabel,
+                      look !== 'default' && styles.itemLabelSmall,
+                      labelFont,
+                      { color },
+                    ]}
+                    numberOfLines={1}>
+                    {item.label}
+                  </Text>
+                  {item.subtitle ? (
+                    <Text
+                      style={[styles.itemSubtitle, regular, { color: theme.textMuted }]}
+                      numberOfLines={1}>
+                      {item.subtitle}
+                    </Text>
+                  ) : null}
+                </View>
+                {item.trailing !== undefined ? (
+                  item.trailing
+                ) : item.badge !== undefined ? (
+                  <Badge value={item.badge} color={item.badgeColor ?? theme.accent} theme={theme} />
+                ) : null}
+              </>
+            )}
           </>
         )}
       </Pressable>
@@ -498,9 +546,15 @@ const styles = StyleSheet.create({
     height: 20,
     borderRadius: 2,
   },
-  itemLabel: {
+  itemText: {
     flex: 1,
+  },
+  itemLabel: {
     fontSize: 16,
+  },
+  itemSubtitle: {
+    fontSize: 12.5,
+    marginTop: 1,
   },
   itemLabelSmall: {
     fontSize: 15,
