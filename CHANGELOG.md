@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.4 (2026-10-26)
+
+### 📝 Docs
+
+- Screenshots in a table, with the name of each style under its image.
+
 ## 0.2.3 (2026-10-26)
 
 ### 🐛 Fixes
