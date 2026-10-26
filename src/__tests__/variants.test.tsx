@@ -115,4 +115,30 @@ describe('variants', () => {
     expect(screen.queryByLabelText('Close')).toBeNull();
     expect(screen.queryByText('Orders')).toBeNull();
   });
+
+  it('drops the action of an item when the menu reopens before it finished closing', async () => {
+    const onPress = jest.fn();
+    const sections = [{ key: 'main', items: [{ key: 'orders', label: 'Orders', onPress }] }];
+    function Toggle() {
+      const [visible, setVisible] = useState(true);
+      return (
+        <>
+          <SideMenu visible={visible} onClose={() => setVisible(false)} sections={sections} />
+          <Text onPress={() => setVisible(true)}>Open</Text>
+        </>
+      );
+    }
+    await render(<Toggle />);
+    await fireEvent.press(screen.getByText('Orders'));
+    await fireEvent.press(screen.getByText('Open'));
+    await act(async () => {
+      jest.runAllTimers();
+    });
+    expect(onPress).not.toHaveBeenCalled();
+  });
+
+  it('keeps the floating card toggle at the foot when the order leaves out the sections', async () => {
+    await render(<Harness variant="floating" order={['header']} header={<Text>Logo</Text>} />);
+    expect(screen.getByLabelText('Collapse menu')).toBeTruthy();
+  });
 });
