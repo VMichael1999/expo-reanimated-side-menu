@@ -40,7 +40,7 @@ export function FloatingLayout({
   const width = useSharedValue(expandedWidth);
   const swipe = useCloseSwipe({
     progress,
-    distance: expandedWidth + MARGIN,
+    distance: (compact ? COMPACT_WIDTH : expandedWidth) + MARGIN,
     side,
     enabled: swipeToClose,
     onClose,
