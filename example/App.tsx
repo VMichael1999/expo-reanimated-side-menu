@@ -164,7 +164,7 @@ function Demo() {
         },
       ],
     },
-    { key: 'promo', content: <PromoCard theme={theme} /> },
+    { key: 'promo', content: ({ compact }) => <PromoCard theme={theme} compact={compact} /> },
     {
       key: 'account',
       title: 'Cuenta',
@@ -275,8 +275,15 @@ function RailHeader({ theme, helpers }: { theme: SideMenuTheme; helpers: SideMen
   );
 }
 
-/** A free block between two sections. */
-function PromoCard({ theme }: { theme: SideMenuTheme }) {
+/** A free block between two sections; just its icon when the menu shows icons only. */
+function PromoCard({ theme, compact }: { theme: SideMenuTheme; compact: boolean }) {
+  if (compact) {
+    return (
+      <View style={[styles.promoCompact, { backgroundColor: theme.accent }]}>
+        <Ionicons name="rocket-outline" size={20} color={theme.onAccent} />
+      </View>
+    );
+  }
   return (
     <View style={[styles.promo, { backgroundColor: theme.accent }]}>
       <Ionicons name="rocket-outline" size={22} color={theme.onAccent} />
@@ -734,6 +741,14 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     padding: 14,
     marginHorizontal: 4,
+  },
+  promoCompact: {
+    alignSelf: 'center',
+    width: 44,
+    height: 44,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   promoTitle: {
     fontSize: 15,
