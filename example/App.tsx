@@ -19,7 +19,7 @@ interface StyleOption {
   name: string;
   description: string;
   icon: keyof typeof Ionicons.glyphMap;
-  /** The palette each style is shown with, taken from the design that inspired it. */
+  /** The palette each style is shown with. */
   theme: ThemeName;
 }
 

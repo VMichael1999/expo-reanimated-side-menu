@@ -14,7 +14,7 @@ import type { LayoutProps } from './shared';
 const TOGGLE_SIZE = 26;
 
 /**
- * Always on screen next to the content (flutter_side_menu): `visible` switches it between open
+ * Always on screen next to the content: `visible` switches it between open
  * and compact. The button on its edge toggles it, and the handle can be dragged either way.
  */
 export function RailLayout({

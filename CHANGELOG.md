@@ -31,11 +31,11 @@
 
 ## 0.1.0 (2026-10-22)
 
-First release of `expo-reanimated-side-menu`, extracted from the side menu built for the Run Rider app and turned into a generic package.
+First release of `expo-reanimated-side-menu`.
 
 ### 🎉 New features
 
-- `variant`: eight ways to present the same menu. `overlay` (the default), plus React Native versions of the designs of four Flutter packages: `reveal` (flutter_advanced_drawer), `cards`, `flip`, `push` and `popup` (awesome_drawer_bar), `floating` (sidebarx) and `rail` (flutter_side_menu).
+- `variant`: eight ways to present the same menu: `overlay` (the default), `reveal`, `cards`, `flip`, `push`, `popup`, `floating` and `rail`.
 - `floating` folds down to icons only with the button at its foot; `rail` stays on screen, open or compact, with a toggle button and a drag handle on its edge (`rail`, `onOpen`).
 - `selectedKey` highlights the current item; `badgeColor` colors a badge; `profile.position: 'bottom'` draws the profile as a card at the foot of the panel.
 - `themes`: ready-made palettes (`night`, `midnight`, `ocean`, `paper`, `slate`).

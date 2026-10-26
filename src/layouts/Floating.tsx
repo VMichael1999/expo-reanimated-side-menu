@@ -17,7 +17,7 @@ const COMPACT_WIDTH = 70;
 
 /**
  * A rounded card floating over the app, with a button at its foot to fold it down to icons only
- * and back (sidebarx).
+ * and back.
  */
 export function FloatingLayout({
   visible,

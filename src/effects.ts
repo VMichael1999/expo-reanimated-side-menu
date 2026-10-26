@@ -37,7 +37,7 @@ export function slideInPanel(progress: number, distance: number, frame: EffectFr
 
 /**
  * `reveal`: the screen slides 75% of the way and shrinks to 85%, anchored on its edge next to the
- * panel; the panel behind grows from 75% to full size (flutter_advanced_drawer).
+ * panel; the panel behind grows from 75% to full size.
  */
 export function revealScreen(progress: number, frame: EffectFrame) {
   'worklet';
@@ -57,7 +57,7 @@ export function revealPanel(progress: number) {
 
 /**
  * `cards`: the screen slides, shrinks to 80% and tilts 12° like a card, with two ghost cards
- * behind it tilted a little more (awesome_drawer_bar, `scaleRight` with shadows).
+ * behind it tilted a little more.
  * `layer` 0 is the screen; 1 and 2 are the ghosts, from front to back.
  */
 export function cardsScreen(progress: number, frame: EffectFrame, layer: 0 | 1 | 2) {
@@ -77,7 +77,7 @@ export function cardsScreen(progress: number, frame: EffectFrame, layer: 0 | 1 |
   };
 }
 
-/** `flip`: the screen swings 45° away on its outer edge and shrinks to 70% (`rotate3dOut`). */
+/** `flip`: the screen swings 45° away on its outer edge and shrinks to 70%. */
 export function flipScreen(progress: number, frame: EffectFrame) {
   'worklet';
   // The turn happens around the outer edge. transformOrigin together with a perspective is not
@@ -96,13 +96,13 @@ export function flipScreen(progress: number, frame: EffectFrame) {
   };
 }
 
-/** `push`: the panel slides in and pushes the screen aside by its own width (`stack`). */
+/** `push`: the panel slides in and pushes the screen aside by its own width. */
 export function pushScreen(progress: number, frame: EffectFrame) {
   'worklet';
   return { transform: [{ translateX: frame.direction * progress * frame.panelWidth }] };
 }
 
-/** `popup`: the menu fades in while growing from 90% (`popUp`). */
+/** `popup`: the menu fades in while growing from 90%. */
 export function popupPanel(progress: number) {
   'worklet';
   return {
