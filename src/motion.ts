@@ -57,6 +57,9 @@ export function useMenuProgress({
 
   useEffect(() => {
     if (visible) {
+      // Reopened before it finished closing: the action queued by that close is dropped, or it
+      // would run on some later, unrelated close.
+      pending.current = null;
       mountedRef.current = true;
       setMounted(true);
       progress.value = withTiming(1, { duration: openDuration, easing: Easing.out(Easing.cubic) });
