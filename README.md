@@ -10,27 +10,54 @@ A polished side menu for **Expo** and **React Native** with **eight presentation
 
 ## Screenshots
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/overlay.png" width="23%" alt="overlay"/>
-  <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/reveal.png" width="23%" alt="reveal"/>
-  <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/cards.png" width="23%" alt="cards"/>
-  <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/flip.png" width="23%" alt="flip"/>
-</p>
-<p align="center"><code>overlay</code> &nbsp;·&nbsp; <code>reveal</code> &nbsp;·&nbsp; <code>cards</code> &nbsp;·&nbsp; <code>flip</code></p>
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/push.png" width="23%" alt="push"/>
-  <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/popup.png" width="23%" alt="popup"/>
-  <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/floating.png" width="23%" alt="floating"/>
-  <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/rail.png" width="23%" alt="rail"/>
-</p>
-<p align="center"><code>push</code> &nbsp;·&nbsp; <code>popup</code> &nbsp;·&nbsp; <code>floating</code> &nbsp;·&nbsp; <code>rail</code></p>
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/floating-compact.png" width="23%" alt="floating compact"/>
-  <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/rail-compact.png" width="23%" alt="rail compact"/>
-</p>
-<p align="center"><code>floating</code> (compact) &nbsp;·&nbsp; <code>rail</code> (compact)</p>
+<table>
+  <tr>
+    <td align="center" width="25%">
+      <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/overlay.png" width="180" alt="overlay"/><br/>
+      <code>overlay</code>
+    </td>
+    <td align="center" width="25%">
+      <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/reveal.png" width="180" alt="reveal"/><br/>
+      <code>reveal</code>
+    </td>
+    <td align="center" width="25%">
+      <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/cards.png" width="180" alt="cards"/><br/>
+      <code>cards</code>
+    </td>
+    <td align="center" width="25%">
+      <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/flip.png" width="180" alt="flip"/><br/>
+      <code>flip</code>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="25%">
+      <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/push.png" width="180" alt="push"/><br/>
+      <code>push</code>
+    </td>
+    <td align="center" width="25%">
+      <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/popup.png" width="180" alt="popup"/><br/>
+      <code>popup</code>
+    </td>
+    <td align="center" width="25%">
+      <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/floating.png" width="180" alt="floating"/><br/>
+      <code>floating</code>
+    </td>
+    <td align="center" width="25%">
+      <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/rail.png" width="180" alt="rail"/><br/>
+      <code>rail</code>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="25%">
+      <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/floating-compact.png" width="180" alt="floating (compact)"/><br/>
+      <code>floating (compact)</code>
+    </td>
+    <td align="center" width="25%">
+      <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/rail-compact.png" width="180" alt="rail (compact)"/><br/>
+      <code>rail (compact)</code>
+    </td>
+  </tr>
+</table>
 
 ## Features
 
