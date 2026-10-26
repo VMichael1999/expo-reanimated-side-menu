@@ -195,6 +195,8 @@ export function MenuPanel({
       {blockOrder.map((block, index) => (
         <Fragment key={`${block}-${index}`}>{blocks[block]()}</Fragment>
       ))}
+      {/* The sections fill the free space; without them, this keeps the accessory at the foot. */}
+      {accessory && !blockOrder.includes('sections') ? <View style={styles.spacer} /> : null}
       {accessory}
     </View>
   );
@@ -437,6 +439,9 @@ const styles = StyleSheet.create({
     marginBottom: 14,
   },
   sections: {
+    flex: 1,
+  },
+  spacer: {
     flex: 1,
   },
   sectionsContent: {
