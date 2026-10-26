@@ -2,6 +2,12 @@
 
 ## 0.2.3 (2026-10-26)
 
+### 🐛 Fixes
+
+- Reopening the menu before it finished closing no longer runs the action of the item tapped on that close later, on some unrelated close.
+- The swipe to close the folded `floating` card follows the finger again.
+- With an `order` that leaves out `sections`, the `floating` card keeps its fold button at the foot.
+
 ### 📝 Docs
 
 - Screenshots shown all at the same size.
