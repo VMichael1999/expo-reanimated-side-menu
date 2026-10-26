@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.3 (2026-10-26)
+
+### 📝 Docs
+
+- Screenshots shown all at the same size.
+
 ## 0.2.2 (2026-10-23)
 
 ### 🐛 Fixes
