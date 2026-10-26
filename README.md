@@ -10,13 +10,27 @@ A polished side menu for **Expo** and **React Native** with **eight presentation
 
 ## Screenshots
 
-| `overlay` | `reveal` | `cards` | `flip` |
-| :---: | :---: | :---: | :---: |
-| <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/overlay.png" width="170" alt="Panel over the dashboard, which turns in 3D behind it"/> | <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/reveal.png" width="170" alt="The dashboard slides away and shrinks to reveal the menu"/> | <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/cards.png" width="170" alt="The dashboard tilted like a card with two ghost cards behind"/> | <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/flip.png" width="170" alt="The dashboard swung 45 degrees in 3D"/> |
-| **`push`** | **`popup`** | **`floating`** | **`rail`** |
-| <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/push.png" width="170" alt="A white panel pushing the dashboard aside"/> | <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/popup.png" width="170" alt="Full-screen purple menu with a close button"/> | <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/floating.png" width="170" alt="Floating purple card menu"/> | <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/rail.png" width="170" alt="White docked rail, open, next to the dashboard"/> |
+<p align="center">
+  <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/overlay.png" width="23%" alt="overlay"/>
+  <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/reveal.png" width="23%" alt="reveal"/>
+  <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/cards.png" width="23%" alt="cards"/>
+  <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/flip.png" width="23%" alt="flip"/>
+</p>
+<p align="center"><code>overlay</code> &nbsp;·&nbsp; <code>reveal</code> &nbsp;·&nbsp; <code>cards</code> &nbsp;·&nbsp; <code>flip</code></p>
 
-Compact modes: <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/floating-compact.png" width="120" alt="Floating card folded to icons"/> <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/rail-compact.png" width="120" alt="Docked rail folded to icons"/>
+<p align="center">
+  <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/push.png" width="23%" alt="push"/>
+  <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/popup.png" width="23%" alt="popup"/>
+  <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/floating.png" width="23%" alt="floating"/>
+  <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/rail.png" width="23%" alt="rail"/>
+</p>
+<p align="center"><code>push</code> &nbsp;·&nbsp; <code>popup</code> &nbsp;·&nbsp; <code>floating</code> &nbsp;·&nbsp; <code>rail</code></p>
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/floating-compact.png" width="23%" alt="floating compact"/>
+  <img src="https://raw.githubusercontent.com/VMichael1999/expo-reanimated-side-menu/main/docs/screenshots/rail-compact.png" width="23%" alt="rail compact"/>
+</p>
+<p align="center"><code>floating</code> (compact) &nbsp;·&nbsp; <code>rail</code> (compact)</p>
 
 ## Features
 
@@ -330,15 +344,6 @@ npm run build
 ```
 
 Without [Watchman](https://facebook.github.io/watchman/), Metro may miss edits in `src` while the example is running; restart it with `npx expo start --clear`.
-
-## Credits
-
-The `reveal`, `cards`, `flip`, `push`, `popup`, `floating` and `rail` styles are React Native reimplementations of the designs of these Flutter packages. No code was copied; thanks to their authors for the ideas:
-
-- [flutter_advanced_drawer](https://github.com/alex-melnyk/flutter_advanced_drawer) by Oleksandr Melnyk (BSD-3-Clause).
-- [awesome_drawer_bar](https://github.com/AppCheap/awesome_drawer_bar) by medyas (MIT).
-- [sidebarx](https://github.com/Frezyx/sidebarx) by Stanislav Ilin (MIT).
-- [flutter_side_menu](https://github.com/resfandiari/flutter_side_menu) by Reza Esfandiari (BSD-3-Clause).
 
 ## License
 
